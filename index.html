@@ -1,7 +1,301 @@
 <!DOCTYPE html>
 <html>
-<body>
-<h1>Hello World</h1>
-<p>I'm hosted with GitHub Pages.</p>
-</body>
+    <head>
+        <title>
+            London Borough of Lewisham Trees
+        </title>
+
+        <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+
+        <link rel="shortcut icon" href="http://cartodb.com/assets/favicon.ico" />
+
+        <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/3.14/themes/css/cartodb.css" type="text/css" />
+        <link rel="stylesheet" href="http://academy.cartodb.com/css/cdbui.css" type="text/css" />
+		<link rel="stylesheet" id="switch_style" href="single_colour.css" type="text/css" />
+		
+            <style type="cartocss/html" id="single_colour">
+                /** simple visualization */
+				#lewishamtreedata_all {
+				   marker-fill-opacity: 1;
+				   marker-line-color: #FFF;
+				   marker-line-width: 0;
+				   marker-line-opacity: 0;
+				   marker-placement: point;
+				   marker-type: ellipse;
+				  [zoom <= 12]{marker-width: 1;}
+				  [zoom = 13]{marker-width: 1.5;}
+				  [zoom = 14]{marker-width: 2;}
+				  [zoom = 15]{marker-width: 3;} 
+				  [zoom >= 16]{marker-width: 4.5;} 
+				   marker-allow-overlap: true;
+				  marker-fill: #176407;	
+				}			
+        </style>
+		
+		<style type="cartocss/html" id="species_colours">
+                /** different colour per species */
+				#lewishamtreedata_all {
+				   marker-fill-opacity: 1;
+				   marker-line-color: #FFF;
+				   marker-line-width: 0;
+				   marker-line-opacity: 0;
+				   marker-placement: point;
+				   marker-type: ellipse;
+				  [zoom <= 12]{marker-width: 1;}
+				  [zoom = 13]{marker-width: 1.5;}
+				  [zoom = 14]{marker-width: 2;}
+				  [zoom = 15]{marker-width: 3;} 
+				  [zoom >= 16]{marker-width: 4.5;} 
+				   marker-allow-overlap: true;
+				  marker-fill: #176407;	
+				}
+				#lewishamtreedata_all[genus="Cherry"] {
+				marker-fill: #b92839;	
+				}
+				#lewishamtreedata_all[genus="Maple"] {
+				marker-fill: #ea941d;	
+				}
+				#lewishamtreedata_all[genus="Lime"] {
+				marker-fill: #236148;	
+				}
+				#lewishamtreedata_all[genus="Plane"] {
+				marker-fill: #1223a7;	
+				}
+				#lewishamtreedata_all[genus="Rowan"] {
+				marker-fill: #8cbc2a;	
+				}
+				#lewishamtreedata_all[genus="Ash"] {
+				marker-fill: #e7c83a;	
+				}
+				#lewishamtreedata_all[genus="Birch"] {
+				marker-fill: #6995e0;	
+				}
+				#lewishamtreedata_all[genus="Oak"] {
+				marker-fill: #5c442c;	
+				}
+				#lewishamtreedata_all[genus="Hawthorn"] {
+				marker-fill: #9b2ea5;	
+				}
+				#lewishamtreedata_all[genus="Horse-chestnut"] {
+				marker-fill: #4e6c08;	
+				}
+				#lewishamtreedata_all[genus="Poplar"] {
+				marker-fill: #4a133b;	
+				}
+				#lewishamtreedata_all[genus="Locust"] {
+				marker-fill: #6c47a4;	
+				}
+				#lewishamtreedata_all[genus="Apple"] {
+				marker-fill: #dea3b9;	
+				}
+				#lewishamtreedata_all[genus="Other"] {
+				marker-fill: #878a91;	
+				}				
+				
+        </style>
+		<script type="infowindow/html" id="infowindow_template">
+		  <div class="cartodb-popup">
+			<a href="#close" class="cartodb-popup-close-button close">x</a>
+			 <div class="cartodb-popup-content-wrapper">
+			   <!--<div class="cartodb-popup-header">
+				 <img style="width: 100%" src="http://cartodb.com/assets/logos/logos_full_cartodb_light.png"></src>
+			   </div>-->
+			   <div class="cartodb-popup-content">
+				 <!-- content.data contains the field info -->
+				 <h4>GENUS:</h4>
+				 <p>{{content.data.genus}}</p>
+				 <h4>SPECIES BOTANICAL:</h4>
+				 <p>{{content.data.species_botanical}}</p>
+				 <h4>WARD:</h4>
+				 <p>{{content.data.ward}}</p>
+				 <h4>AGE:</h4>
+				 <p>{{content.data.age}}</p>
+				 <h4>CONDITION:</h4>
+				 <p>{{content.data.condition}}</p>
+				 <h4>HEIGHT:</h4>
+				 <p>{{content.data.height}}</p>				 
+			   </div>
+			 </div>
+			 <div class="cartodb-popup-tip-container"></div>
+		  </div>
+		</script>
+    </head>
+    <body>
+        <div id="map"></div>
+        <div id="ward" class="layer_selector">
+			<p>Ward</p>
+			<ul>
+				<li><input type='checkbox' checked=checked class='filter' name='ward' id='Bellingham' value="'Bellingham'"/><label for='Bellingham'>Bellingham</label></li>
+				<li><input type='checkbox' checked=checked class='filter' name='ward' id='Blackheath' value="'Blackheath'"/><label for='Blackheath'>Blackheath</label></li>
+				<li><input type='checkbox' checked=checked class='filter' name='ward' id='Brockley' value="'Brockley'"/><label for='Brockley'>Brockley</label></li>
+				<li><input type='checkbox' checked=checked class='filter' name='ward' id='Catford South' value="'Catford South'"/><label for='Catford South'>Catford South</label></li>
+				<li><input type='checkbox' checked=checked class='filter' name='ward' id='Crofton Park' value="'Crofton Park'"/><label for='Crofton Park'>Crofton Park</label></li>
+				<li><input type='checkbox' checked=checked class='filter' name='ward' id='Downham' value="'Downham'"/><label for='Downham'>Downham</label></li>
+				<li><input type='checkbox' checked=checked class='filter' name='ward' id='Evelyn' value="'Evelyn'"/><label for='Evelyn'>Evelyn</label></li>
+				<li><input type='checkbox' checked=checked class='filter' name='ward' id='Forest Hill' value="'Forest Hill'"/><label for='Forest Hill'>Forest Hill</label></li>
+				<li><input type='checkbox' checked=checked class='filter' name='ward' id='Grove Park' value="'Grove Park'"/><label for='Grove Park'>Grove Park</label></li>
+				<li><input type='checkbox' checked=checked class='filter' name='ward' id='Ladywell' value="'Ladywell'"/><label for='Ladywell'>Ladywell</label></li>
+				<li><input type='checkbox' checked=checked class='filter' name='ward' id='Lee Green' value="'Lee Green'"/><label for='Lee Green'>Lee Green</label></li>
+				<li><input type='checkbox' checked=checked class='filter' name='ward' id='Lewisham Central' value="'Lewisham Central'"/><label for='Lewisham Central'>Lewisham Central</label></li>
+				<li><input type='checkbox' checked=checked class='filter' name='ward' id='New Cross' value="'New Cross'"/><label for='New Cross'>New Cross</label></li>
+				<li><input type='checkbox' checked=checked class='filter' name='ward' id='Perry Vale' value="'Perry Vale'"/><label for='Perry Vale'>Perry Vale</label></li>
+				<li><input type='checkbox' checked=checked class='filter' name='ward' id='Rushey Green' value="'Rushey Green'"/><label for='Rushey Green'>Rushey Green</label></li>
+				<li><input type='checkbox' checked=checked class='filter' name='ward' id='Sydenham' value="'Sydenham'"/><label for='Sydenham'>Sydenham</label></li>
+				<li><input type='checkbox' checked=checked class='filter' name='ward' id='Telegraph Hill' value="'Telegraph Hill'"/><label for='Telegraph Hill'>Telegraph Hill</label></li>
+				<li><input type='checkbox' checked=checked class='filter' name='ward' id='Whitefoot' value="'Whitefoot'"/><label for='Whitefoot'>Whitefoot</label></li>
+				</li> 
+			</ul>
+        </div>
+		<div id="genus" class="layer_selector">
+			<p>Genus</p>
+			<ul>
+				<li><input type='checkbox' checked=checked class='filter' name='genus' id='Cherry' value="'Cherry'"/><label for='Cherry' class='cherry'>Cherry</label></li>
+				<li><input type='checkbox' checked=checked class='filter' name='genus' id='Maple' value="'Maple'"/><label for='Maple' class='maple'>Maple</label></li>
+				<li><input type='checkbox' checked=checked class='filter' name='genus' id='Lime' value="'Lime'"/><label for='Lime' class='lime'>Lime</label></li>
+				<li><input type='checkbox' checked=checked class='filter' name='genus' id='Plane' value="'Plane'"/><label for='Plane' class= 'plane'>Plane</label></li>
+				<li><input type='checkbox' checked=checked class='filter' name='genus' id='Rowan' value="'Rowan'"/><label for='Rowan' class= 'rowan'>Rowan</label></li>
+				<li><input type='checkbox' checked=checked class='filter' name='genus' id='Ash' value="'Ash'"/><label for='Ash' class= 'ash'>Ash</label></li>
+				<li><input type='checkbox' checked=checked class='filter' name='genus' id='Birch' value="'Birch'"/><label for='Birch' class='birch'>Birch</label></li>
+				<li><input type='checkbox' checked=checked class='filter' name='genus' id='Oak' value="'Oak'"/><label for='Oak' class='oak'>Oak</label></li>
+				<li><input type='checkbox' checked=checked class='filter' name='genus' id='Hawthorn' value="'Hawthorn'"/><label for='Hawthorn' class='hawthorn'>Hawthorn</label></li>
+				<li><input type='checkbox' checked=checked class='filter' name='genus' id='Horse-chestnut' value="'Horse-chestnut'"/><label for='Horse-chestnut' class='horse-chestnut'>Horse-chestnut</label></li>
+				<li><input type='checkbox' checked=checked class='filter' name='genus' id='Poplar' value="'Poplar'"/><label for='Poplar' class='poplar'>Poplar</label></li>
+				<li><input type='checkbox' checked=checked class='filter' name='genus' id='Locust' value="'Locust'"/><label for='Locust' class='locust'>Locust</label></li>
+				<li><input type='checkbox' checked=checked class='filter' name='genus' id='Apple' value="'Apple'"/><label for='Apple' class='apple'>Apple</label></li>
+				<li><input type='checkbox' checked=checked class='filter' name='genus' id='Other' value="'Other'"/><label for='Other' class='other'>Other</label></li>
+			</ul>
+		</div>
+		<div id="colours" class="layer_selector">
+			<ul>
+				<li data="single_colour" data-type="cartocss" class='cartocss_selected'>Single Colour</li>
+				<li data="species_colours" data-type="cartocss">Per Species Colour</li>
+			</ul>
+		</div>
+		<div id="home-link">
+		<input type="button" class='homebutton' onclick="location.href='http://catfordstreettrees.org.uk';" value="Return to catfordstreettrees.org.uk" />
+		</div>
+        <!-- include cartodb.js library -->
+        <script src="http://libs.cartocdn.com/cartodb.js/v3/3.14/cartodb.js" type="text/javascript"></script>
+        <!-- Place your code in the script tags below -->
+        <script type="text/javascript">
+        window.onload = function() {
+            // var tableName = "all_day_cdb_gu_l3";
+            var tableName = "lewisham_tree_map";
+            var layerSource = {
+                    user_name: 'catfordstreettrees',
+                    type: 'cartodb',
+                    sublayers: [{
+                        sql: "SELECT * FROM " + tableName, // Tree Data
+                        cartocss: $("#single_colour").html() // Simple visualization
+                    }]
+            }
+            // Create layer selector
+            function createSelector(layer) {
+				var condition = ""; // SQL or CartoCSS string
+				var $options = $(".layer_selector").find("li");
+				$options.click(function(e) {
+					var $li = $(e.target);
+					var selected = $li.attr('data');
+					var type = $li.data('type'); // 'sql' or 'cartocss'
+
+					if (type === "cartocss") { // if a CartoCSS selector is chosen, set the style
+						$options.removeClass('cartocss_selected');
+						if (selected !== "simple") {
+							$li.addClass('cartocss_selected');
+							$("#switch_style").attr("href", selected + ".css");
+						}
+						condition = $('#'+selected).text();
+						layer.setCartoCSS(condition);
+					} else { // if a SQL selector is chosen, re-query the data
+						$options.removeClass('sql_selected');
+						if (selected !== "") {
+							$li.addClass('sql_selected');
+						}
+						//layer.setSQL("SELECT * FROM " + tableName + selected);
+					}
+				});
+				var $options1 = $(".layer_selector").find("input");
+				var sql = new cartodb.SQL({ user: 'catfordstreettrees' });
+				$options1.click(function showSelectedValues() {
+					var selected_genus = $("input[name=genus]:checked").map(function () {return this.value;}).get().join(",");
+					var selected_ward = $("input[name=ward]:checked").map(function () {return this.value;}).get().join(",");
+					sql.execute("select genus, count(*) FROM "+ tableName +" where ward in (" + selected_ward + ") group by genus")
+					.done(function(data) {
+						for (var i = 0; i < data.total_rows; i++) {
+						  $("label[for = " + data.rows[i].genus +"]").text(data.rows[i].genus + " - " + data.rows[i].count);
+						}
+					});
+					//alert(selected_genus);
+					//alert($("input[name=genus]:checked").map(
+					 //function () {return this.value;}).get().join(","));
+					var sqlString = "SELECT * FROM " + tableName + " WHERE genus IN (" + selected_genus + ") AND ward IN (" + selected_ward + ")";
+					//alert(sqlString);
+					layer.setSQL(sqlString);
+					sql.getBounds(sqlString).done(function(bounds) {
+					  //map_object.setBounds(bounds);
+					  //console.log(bounds);
+					  map_object.fitBounds(bounds);
+					});
+					
+				});
+			}
+            // Instantiate new map object, place it in 'map' element
+            var map_object = new L.Map('map', {
+                center: [51.4531,0.0486], // Lewisham, London
+                zoom: 13,
+				fullscreenControl: true,
+				shareable: true
+            });
+            // Pull tiles from CartoDB's basemaps
+			//L.tileLayer('http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png',{
+            L.tileLayer('https://a.tiles.mapbox.com/v4/catfordstreettrees.6a4f6911/{z}/{x}/{y}.png?access_token={token}', {
+			//L.tileLayer('https://a.tiles.mapbox.com/v4/mapbox.light/{z}/{x}/{y}.png?access_token={token}', {			
+                attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+				token: 'pk.eyJ1IjoiY2F0Zm9yZHN0cmVldHRyZWVzIiwiYSI6IjQ2ZjQ3MjE0Y2RlMjc0MTA1YmQwOGRjMTk4MDExMDU3In0.3Zb9rrfLQNJOne4iw01YUQ',
+				maxZoom: 18,
+				minZoom: 10
+            }).addTo(map_object);
+            // for storing sublayer outside of createlayer
+            var sublayer;
+            // Add data layer to your map
+            cartodb.createLayer(map_object,layerSource)
+                .addTo(map_object)
+                .done(function(layer) {
+                    sublayer = layer.getSubLayer(0);
+					//sublayer.set(subLayerOptions);
+					//sublayer.infowindow.set('template', $('#infowindow_template').html());			
+					//sublayer.on('featureClick', function(e, latlng, pos, data) {alert("Hey! You clicked " + data.cartodb_id);});
+					//cdb.vis.Vis.addInfowindow(map_object, layer.getSubLayer(0), ['cartodb_id'])
+					cdb.vis.Vis.addInfowindow(map_object, sublayer, ['genus','species_botanical','ward','age','condition','height'], {
+					 // we provide a nice default template, if you want yours uncomment this
+					 infowindowTemplate: $('#infowindow_template').html()
+				   });
+				   sublayer.setInteraction(true);
+							
+                    createSelector(sublayer);
+                })
+                .error(function(err) {
+                    console.log("error: " + err);
+                });
+			
+			var sql = new cartodb.SQL({ user: 'catfordstreettrees' });
+			var selected_ward = $("input[name=ward]:checked").map(function () {return this.value;}).get().join(",");
+					sql.execute("select genus, count(*) FROM "+ tableName +" where ward in (" + selected_ward + ") group by genus")
+					.done(function(data) {
+						for (var i = 0; i < data.total_rows; i++) {
+						  $("label[for = " + data.rows[i].genus +"]").text(data.rows[i].genus + " - " + data.rows[i].count);
+						}
+					});
+			
+			var sql1 = new cartodb.SQL({ user: 'catfordstreettrees' });
+			sql1.getBounds("select * from " + tableName).done(function(bounds) {
+			  //map_object.setBounds(bounds);
+			  //console.log(bounds);
+			  map_object.fitBounds(bounds);
+			});
+
+            }
+        </script>
+    </body>
 </html>

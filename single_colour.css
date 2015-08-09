@@ -1,0 +1,153 @@
+            html, body, #map {
+                height: 100%;
+                padding: 0;
+                margin: 0;
+            }
+            #ward {
+                position: absolute;
+                top: 20px;
+                right: 20px;
+            }
+            #genus {
+                position: absolute;
+                top: 20px;
+                right: 222px;
+            }
+			#colours {
+                position: absolute;
+				top: 450px;
+                right: 222px;
+            }
+			#home-link{
+                position: absolute;
+				top: 9px;
+                left: 46px;
+            }
+            .layer_selector {
+                background: rgba(255,255,255,0.9);
+                border-radius: 5px;
+                padding: 0;
+                border: 1px solid #999;
+                width: 180px;
+            }
+            
+            .layer_selector > p {
+                padding: 5px 25px;
+				font-family: Open Sans, Helvetica, Arial;
+                border-bottom: 1px solid #999;
+            }
+            
+            .layer_selector ul {
+                padding: 0; margin: 0;
+                list-style-type: none;
+            }
+            .layer_selector li {
+                padding: 0px 10px;
+                font-family: Open Sans, Helvetica, Arial;
+                font-size: 12px;
+                color: #444;
+                cursor: pointer;
+            }
+            .layer_selector li:not(:last-child) {
+                border-bottom: 1px solid #999;
+            }
+            .layer_selector li:hover {
+                background-color: #F0F0F0;
+                cursor: pointer;
+            }
+            .layer_selector li.sql_selected,
+            .layer_selector li.cartocss_selected {
+                background-color: #F0F0F0;
+            }
+			.homebutton{
+                padding: 0px 10px;
+                font-family: Open Sans, Helvetica, Arial;
+                font-size: 12px;
+                color: #444;
+                cursor: pointer;
+            }
+			
+			div.cartodb-popup {
+				position:relative;
+				width:180px;
+				height:auto;
+				padding:0 0 0 0;
+				margin:0;
+				background: none;
+			  }
+
+			  div.cartodb-popup div.cartodb-popup-content-wrapper {
+				position:relative;
+				width:160px;
+				max-width: 250px;
+				padding:5px -20px 5px 5px;
+				overflow-x: hidden;
+				background:white;
+				opacity:1;
+			   -webkit-border-radius: 15px ;
+			   -moz-border-radius: 15px;
+			   border-radius: 5px;
+			  }
+
+			  div.cartodb-popup div.cartodb-popup-content {
+				display:block;
+				width:350px;
+				max-width: 350px;
+				min-height:5px;
+				height:470;
+				max-height:470px;
+				margin: 0;
+				opacity:1;
+				padding: 0;
+				z-index:10;
+				overflow-y: auto;
+				overflow-x: hidden!important;
+				outline: none;
+				text-align:left;
+			  }
+			 div.cartodb-popup div.cartodb-popup-tip-container {
+				width:350px;
+				height:30px;
+				background:none;
+			  }
+			    div.cartodb-popup-close-button {
+				position: absolute;
+				top: -20px;
+				right: 20px;
+				width: 26px;
+				height: 26px;
+				background: url('http://libs.cartodb.com/cartodb.js/v3/themes/img/light.png') no-repeat 0 23px;
+				text-indent: -9999px;
+				font-size: 0;
+				line-height: 0;
+				opacity: 1;
+				text-transform: uppercase;
+				z-index: 3;
+			  }
+			  div.cartodb-popup-tip-container {
+				position: absolute;
+				bottom: -3px;
+				left: 23px;
+				width: 16px;
+				height: 14px;
+				background: url('http://libs.cartodb.com/cartodb.js/v3/themes/img/light.png') no-repeat -23px -7px;
+				text-indent: -9999px;
+				font-size: 0;
+				line-height: 0;
+				opacity: 1;
+				z-index: 3;
+			  }
+			 .cherry {color: #176407;font-weight: bold;}
+			 .maple {color: #176407;font-weight: bold;}
+			 .lime {color: #176407;font-weight: bold;}
+			 .plane {color: #176407;font-weight: bold;}
+			 .rowan {color: #176407;font-weight: bold;}
+			 .ash {color: #176407;font-weight: bold;}
+			 .birch {color: #176407;font-weight: bold;}
+			 .oak {color: #176407;font-weight: bold;}
+			 .hawthorn {color: #176407;font-weight: bold;}
+			 .horse-chestnut {color: #176407;font-weight: bold;}
+			 .poplar {color: #176407;font-weight: bold;}
+			 .locust {color: #176407;font-weight: bold;}
+			 .apple {color: #176407;font-weight: bold;}
+			 .other {color: #176407;font-weight: bold;}
