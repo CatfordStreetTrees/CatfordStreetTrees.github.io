@@ -186,6 +186,14 @@
 				<li><input type='checkbox' checked=checked class='filter' name='condition' id='Not Recorded' value="''"/><label for='Not Recorded'>Not Recorded</label></li>
 			</ul>
 		</div>
+		<div id="category" class="layer_selector">
+			<p><input type='checkbox' checked=checked class='filter' name='select-all' id='select-all-category' value='category'/> Category</p>
+			<ul>
+				<li><input type='checkbox' checked=checked class='filter' name='category' id='Street Tree' value="'Street'"/><label for='Street Tree'>Street Tree</label></li>
+				<li><input type='checkbox' checked=checked class='filter' name='category' id='Park Tree' value="'Park'"/><label for='Park Tree'>Park Tree</label></li>
+				<li><input type='checkbox' checked=checked class='filter' name='category' id='Other' value="'Other'"/><label for='Other Category'>Other</label></li>
+			</ul>
+		</div>
 		<div id="colours" class="layer_selector">
 			<ul>
 				<li data="single_colour" data-type="cartocss" class='cartocss_selected'>Single Colour</li>
@@ -242,7 +250,8 @@
 					var selected_ward = $("input[name=ward]:checked").map(function () {return this.value;}).get().join(",");
 					var selected_age = $("input[name=age]:checked").map(function () {return this.value;}).get().join(",");
 					var selected_condition = $("input[name=condition]:checked").map(function () {return this.value;}).get().join(",");
-					sql.execute("select genus, count(*) FROM "+ tableName +" where ward in (" + selected_ward + ") and age in (" + selected_age + ") and condition in (" + selected_condition + ") group by genus")
+					var selected_category = $("input[name=category]:checked").map(function () {return this.value;}).get().join(",");
+					sql.execute("select genus, count(*) FROM "+ tableName +" where ward in (" + selected_ward + ") and age in (" + selected_age + ") and condition in (" + selected_condition + ") and category in (" + selected_category + ") group by genus")
 					.done(function(data) {
 						for (var i = 0; i < data.total_rows; i++) {
 						  $("label[for = " + data.rows[i].genus +"]").text(data.rows[i].genus + " - " + data.rows[i].count);
@@ -251,7 +260,7 @@
 					//alert(selected_genus);
 					//alert($("input[name=genus]:checked").map(
 					 //function () {return this.value;}).get().join(","));
-					var sqlString = "SELECT * FROM " + tableName + " WHERE genus IN (" + selected_genus + ") AND ward IN (" + selected_ward + ") AND age IN (" + selected_age + ") AND condition IN (" + selected_condition + ")";
+					var sqlString = "SELECT * FROM " + tableName + " WHERE genus IN (" + selected_genus + ") AND ward IN (" + selected_ward + ") AND age IN (" + selected_age + ") AND condition IN (" + selected_condition + ") AND category IN (" + selected_category + ")";
 					//alert(sqlString);
 					layer.setSQL(sqlString);
 					sql.getBounds(sqlString).done(function(bounds) {

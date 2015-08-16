@@ -28,6 +28,11 @@
 				top: 441px;
                 right: 220px;
             }
+			#category {
+                position: absolute;
+				top: 756px;
+                right: 20px;
+            }
 			#home-link{
                 position: absolute;
 				top: 9px;
