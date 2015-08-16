@@ -11,12 +11,22 @@
             #genus {
                 position: absolute;
                 top: 20px;
-                right: 222px;
+                right: 220px;
             }
 			#colours {
                 position: absolute;
-				top: 450px;
-                right: 222px;
+				top: 627px;
+                right: 220px;
+            }
+			#age {
+                position: absolute;
+				top: 545px;
+                right: 20px;
+            }
+			#condition {
+                position: absolute;
+				top: 441px;
+                right: 220px;
             }
 			#home-link{
                 position: absolute;
@@ -32,7 +42,7 @@
             }
             
             .layer_selector > p {
-                padding: 5px 25px;
+                padding: 5px 10px;
 				font-family: Open Sans, Helvetica, Arial;
                 border-bottom: 1px solid #999;
             }
