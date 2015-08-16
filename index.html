@@ -7,8 +7,7 @@
 
         <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
         <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-
-        <link rel="shortcut icon" href="http://cartodb.com/assets/favicon.ico" />
+		<link href="favicon.ico" rel="shortcut icon" type="image/x-icon" />
 
         <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/3.14/themes/css/cartodb.css" type="text/css" />
         <link rel="stylesheet" href="http://academy.cartodb.com/css/cdbui.css" type="text/css" />
@@ -124,7 +123,7 @@
     <body>
         <div id="map"></div>
         <div id="ward" class="layer_selector">
-			<p>Ward</p>
+			<p><input type='checkbox' checked=checked class='filter' name='select-all' id='select-all-ward' value='ward'/> Ward</p>
 			<ul>
 				<li><input type='checkbox' checked=checked class='filter' name='ward' id='Bellingham' value="'Bellingham'"/><label for='Bellingham'>Bellingham</label></li>
 				<li><input type='checkbox' checked=checked class='filter' name='ward' id='Blackheath' value="'Blackheath'"/><label for='Blackheath'>Blackheath</label></li>
@@ -148,7 +147,7 @@
 			</ul>
         </div>
 		<div id="genus" class="layer_selector">
-			<p>Genus</p>
+			<p><input type='checkbox' checked=checked class='filter' name='select-all' id='select-all-genus' value='genus'/> Genus</p>
 			<ul>
 				<li><input type='checkbox' checked=checked class='filter' name='genus' id='Cherry' value="'Cherry'"/><label for='Cherry' class='cherry'>Cherry</label></li>
 				<li><input type='checkbox' checked=checked class='filter' name='genus' id='Maple' value="'Maple'"/><label for='Maple' class='maple'>Maple</label></li>
@@ -164,6 +163,27 @@
 				<li><input type='checkbox' checked=checked class='filter' name='genus' id='Locust' value="'Locust'"/><label for='Locust' class='locust'>Locust</label></li>
 				<li><input type='checkbox' checked=checked class='filter' name='genus' id='Apple' value="'Apple'"/><label for='Apple' class='apple'>Apple</label></li>
 				<li><input type='checkbox' checked=checked class='filter' name='genus' id='Other' value="'Other'"/><label for='Other' class='other'>Other</label></li>
+			</ul>
+		</div>
+		<div id="age" class="layer_selector">
+			<p><input type='checkbox' checked=checked class='filter' name='select-all' id='select-all-age' value='age'/> Age</p>
+			<ul>
+				<li><input type='checkbox' checked=checked class='filter' name='age' id='Young' value="'Young'"/><label for='Young'>Young</label></li>
+				<li><input type='checkbox' checked=checked class='filter' name='age' id='Semi Mature' value="'Semi Mature'"/><label for='Semi Mature'>Semi Mature</label></li>
+				<li><input type='checkbox' checked=checked class='filter' name='age' id='Mature' value="'Mature'"/><label for='Mature'>Mature</label></li>
+				<li><input type='checkbox' checked=checked class='filter' name='age' id='Established' value="'Established'"/><label for='Established'>Established</label></li>
+				<li><input type='checkbox' checked=checked class='filter' name='age' id='Over Mature' value="'Over Mature'"/><label for='Over Mature'>Over Mature</label></li>
+				<li><input type='checkbox' checked=checked class='filter' name='age' id='Not Recorded' value="''"/><label for='Not Recorded'>Not Recorded</label></li>
+			</ul>
+		</div>
+		<div id="condition" class="layer_selector">
+			<p><input type='checkbox' checked=checked class='filter' name='select-all' id='select-all-condition' value='condition'/> Condition</p>
+			<ul>
+				<li><input type='checkbox' checked=checked class='filter' name='condition' id='Good' value="'Good'"/><label for='Good'>Good</label></li>
+				<li><input type='checkbox' checked=checked class='filter' name='condition' id='Reasonable' value="'Reasonable'"/><label for='Reasonable'>Reasonable</label></li>
+				<li><input type='checkbox' checked=checked class='filter' name='condition' id='Poor' value="'Poor'"/><label for='Poor'>Poor</label></li>
+				<li><input type='checkbox' checked=checked class='filter' name='condition' id='Reinstated' value="'Reinstated'"/><label for='Reinstated'>Reinstated</label></li>
+				<li><input type='checkbox' checked=checked class='filter' name='condition' id='Not Recorded' value="''"/><label for='Not Recorded'>Not Recorded</label></li>
 			</ul>
 		</div>
 		<div id="colours" class="layer_selector">
@@ -220,7 +240,9 @@
 				$options1.click(function showSelectedValues() {
 					var selected_genus = $("input[name=genus]:checked").map(function () {return this.value;}).get().join(",");
 					var selected_ward = $("input[name=ward]:checked").map(function () {return this.value;}).get().join(",");
-					sql.execute("select genus, count(*) FROM "+ tableName +" where ward in (" + selected_ward + ") group by genus")
+					var selected_age = $("input[name=age]:checked").map(function () {return this.value;}).get().join(",");
+					var selected_condition = $("input[name=condition]:checked").map(function () {return this.value;}).get().join(",");
+					sql.execute("select genus, count(*) FROM "+ tableName +" where ward in (" + selected_ward + ") and age in (" + selected_age + ") and condition in (" + selected_condition + ") group by genus")
 					.done(function(data) {
 						for (var i = 0; i < data.total_rows; i++) {
 						  $("label[for = " + data.rows[i].genus +"]").text(data.rows[i].genus + " - " + data.rows[i].count);
@@ -229,13 +251,13 @@
 					//alert(selected_genus);
 					//alert($("input[name=genus]:checked").map(
 					 //function () {return this.value;}).get().join(","));
-					var sqlString = "SELECT * FROM " + tableName + " WHERE genus IN (" + selected_genus + ") AND ward IN (" + selected_ward + ")";
+					var sqlString = "SELECT * FROM " + tableName + " WHERE genus IN (" + selected_genus + ") AND ward IN (" + selected_ward + ") AND age IN (" + selected_age + ") AND condition IN (" + selected_condition + ")";
 					//alert(sqlString);
 					layer.setSQL(sqlString);
 					sql.getBounds(sqlString).done(function(bounds) {
 					  //map_object.setBounds(bounds);
 					  //console.log(bounds);
-					  map_object.fitBounds(bounds);
+					  map_object.fitBounds(bounds,{paddingBottomRight:[420,0]});
 					});
 					
 				});
@@ -292,10 +314,25 @@
 			sql1.getBounds("select * from " + tableName).done(function(bounds) {
 			  //map_object.setBounds(bounds);
 			  //console.log(bounds);
-			  map_object.fitBounds(bounds);
+			  map_object.fitBounds(bounds,{paddingBottomRight:[420,0]});
 			});
 
-            }
+            };
+		// Listen for click on toggle checkbox
+				$('input[name=select-all]').click(function(event) {
+					var selectallvalue = this.value;
+					if(this.checked) {
+						// Iterate each checkbox
+						$('input[name= ' + selectallvalue + ']').each(function() {
+							this.checked = true;					
+						});
+					}
+					 else {
+						$('input[name= ' + selectallvalue + ']').each(function() {
+							this.checked = false;
+						});
+					  }
+				});
         </script>
     </body>
 </html>
