@@ -251,24 +251,41 @@
 					var selected_age = $("input[name=age]:checked").map(function () {return this.value;}).get().join(",");
 					var selected_condition = $("input[name=condition]:checked").map(function () {return this.value;}).get().join(",");
 					var selected_category = $("input[name=category]:checked").map(function () {return this.value;}).get().join(",");
-					sql.execute("select genus, count(*) FROM "+ tableName +" where ward in (" + selected_ward + ") and age in (" + selected_age + ") and condition in (" + selected_condition + ") and category in (" + selected_category + ") group by genus")
-					.done(function(data) {
-						for (var i = 0; i < data.total_rows; i++) {
-						  $("label[for = " + data.rows[i].genus +"]").text(data.rows[i].genus + " - " + data.rows[i].count);
-						}
-					});
-					//alert(selected_genus);
-					//alert($("input[name=genus]:checked").map(
-					 //function () {return this.value;}).get().join(","));
-					var sqlString = "SELECT * FROM " + tableName + " WHERE genus IN (" + selected_genus + ") AND ward IN (" + selected_ward + ") AND age IN (" + selected_age + ") AND condition IN (" + selected_condition + ") AND category IN (" + selected_category + ")";
-					//alert(sqlString);
-					layer.setSQL(sqlString);
-					sql.getBounds(sqlString).done(function(bounds) {
-					  //map_object.setBounds(bounds);
-					  //console.log(bounds);
-					  map_object.fitBounds(bounds,{paddingBottomRight:[420,0]});
-					});
-					
+					//console.log(!selected_genus || !selected_ward || !selected_age || !selected_condition || !selected_category);
+					//test none of the filters are blank, i.e. all unselected
+					if((!selected_genus || !selected_ward || !selected_age || !selected_condition || !selected_category) === false) {
+						var sqlString1 = "with genus_label as (select distinct genus from " + tableName +  "), " +
+										 "tree_count as (select genus, count(*) from " + tableName + " " +
+										 "where ward in (" + selected_ward + ") " +
+										 "and age in (" + selected_age + ") " +
+										 "and condition in (" + selected_condition + ") " +
+										 "and category in (" + selected_category + ") " +
+										 "group by genus) " +
+										 "select genus_label.genus, " +
+										 "CASE WHEN tree_count.count is null THEN 0 ELSE tree_count.count END " +
+										 "FROM genus_label " +
+										 "left outer join tree_count " +
+										 "on genus_label.genus = tree_count.genus ";
+						//console.log(sqlString1);
+						//sql.execute("select genus, count(*) FROM "+ tableName +" where ward in (" + selected_ward + ") and age in (" + selected_age + ") and condition in (" + selected_condition + ") and category in (" + selected_category + ") group by genus")
+						sql.execute(sqlString1)
+						.done(function(data) {
+							for (var i = 0; i < data.total_rows; i++) {
+							  $("label[for = " + data.rows[i].genus +"]").text(data.rows[i].genus + " - " + data.rows[i].count);
+							}
+						});
+						//alert(selected_genus);
+						//alert($("input[name=genus]:checked").map(
+						 //function () {return this.value;}).get().join(","));
+						var sqlString = "SELECT * FROM " + tableName + " WHERE genus IN (" + selected_genus + ") AND ward IN (" + selected_ward + ") AND age IN (" + selected_age + ") AND condition IN (" + selected_condition + ") AND category IN (" + selected_category + ")";
+						//alert(sqlString);
+						layer.setSQL(sqlString);
+						sql.getBounds(sqlString).done(function(bounds) {
+						  //map_object.setBounds(bounds);
+						  //console.log(bounds);
+						  map_object.fitBounds(bounds,{paddingBottomRight:[420,0]});
+						});
+					}
 				});
 			}
             // Instantiate new map object, place it in 'map' element
