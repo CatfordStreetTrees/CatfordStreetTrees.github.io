@@ -1,0 +1,62 @@
+            html, body, #map {
+                height: 100%;
+                padding: 0;
+                margin: 0;
+            }
+			.navbar-title {
+			position: absolute;
+			left: 50%;
+			margin-left: -172px;
+			margin-top: 16px;
+			font-size: 20px;
+			font-family: Open Sans, Helvetica, Arial;
+			}
+			body { 
+				padding-top: 58px; 
+				padding-bottom: 58px;
+			}
+			.dropdown-menu {
+						background: rgba(255,255,255,0.9);
+						border-radius: 5px;
+						padding: 0;
+						border: 1px solid #999;
+						width: 180px;
+					}
+					
+			.dropdown-menu > p {
+				padding: 5px 10px;
+				font-family: Open Sans, Helvetica, Arial;
+				border-bottom: 1px solid #999;
+			}
+			
+			.dropdown-menu ul {
+				padding: 0; margin: 0;
+				list-style-type: none;
+			}	
+			.dropdown-menu li {
+				padding: 0px 15px;
+				font-family: Open Sans, Helvetica, Arial;
+				font-weight: normal;
+				font-size: 12px;
+				color: #444;
+				cursor: pointer;
+			}
+			.dropdown-menu li:first-child {
+				margin-top: 9px;
+			}
+			.dropdown-menu input {
+				margin-right: 5px;
+			}
+			.navbar .navbar-collapse {
+				text-align: center;
+			}
+			.cartodb-logo {
+				z-index:0 !important; 
+			}
+			div.cartodb-popup div.cartodb-popup-content-wrapper {
+				width: auto !important;
+				max-width: none !important;
+			}
+			div.cartodb-legend {
+				bottom: 90px !important;
+			}

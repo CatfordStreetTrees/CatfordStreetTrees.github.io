@@ -11,7 +11,15 @@
 
         <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/3.14/themes/css/cartodb.css" type="text/css" />
         <link rel="stylesheet" href="http://academy.cartodb.com/css/cdbui.css" type="text/css" />
+		<link rel="stylesheet" href="map.css" type="text/css" />
 		<link rel="stylesheet" id="switch_style" href="single_colour.css" type="text/css" />
+		<!-- Bootstrap core CSS -->
+		
+		<link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
+		<!--<link href="bootstrap-3.3.2-dist/bootstrap-3.3.2-dist/css/bootstrap.min.css" rel="stylesheet">-->
+		<!-- FontAwesome CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+		<!--<link href="font-awesome-4.4.0/font-awesome-4.4.0/css/font-awesome.css" rel="stylesheet" type="text/css" />-->
 		
             <style type="cartocss/html" id="single_colour">
                 /** simple visualization */
@@ -93,272 +101,187 @@
 				}				
 				
         </style>
-		<script type="infowindow/html" id="infowindow_template">
-		  <div class="cartodb-popup">
-			<a href="#close" class="cartodb-popup-close-button close">x</a>
-			 <div class="cartodb-popup-content-wrapper">
-			   <!--<div class="cartodb-popup-header">
-				 <img style="width: 100%" src="http://cartodb.com/assets/logos/logos_full_cartodb_light.png"></src>
-			   </div>-->
-			   <div class="cartodb-popup-content">
-				 <!-- content.data contains the field info -->
-				 <h4>GENUS:</h4>
-				 <p>{{content.data.genus}}</p>
-				 <h4>SPECIES BOTANICAL:</h4>
-				 <p>{{content.data.species_botanical}}</p>
-				 <h4>WARD:</h4>
-				 <p>{{content.data.ward}}</p>
-				 <h4>AGE:</h4>
-				 <p>{{content.data.age}}</p>
-				 <h4>CONDITION:</h4>
-				 <p>{{content.data.condition}}</p>
-				 <h4>HEIGHT:</h4>
-				 <p>{{content.data.height}}</p>				 
-			   </div>
-			 </div>
-			 <div class="cartodb-popup-tip-container"></div>
-		  </div>
-		</script>
+
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+		<!--<script src="bootstrap-3.3.2-dist/bootstrap-3.3.2-dist/js/bootstrap.min.js"></script>-->
     </head>
     <body>
         <div id="map"></div>
-        <div id="ward" class="layer_selector">
-			<p><input type='checkbox' checked=checked class='filter' name='select-all' id='select-all-ward' value='ward'/> Ward</p>
+   <div class="container">
+	 <header>
+		<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+			<div class="container">
+				<div class="navbar-header pull-left">
+				  <a class="navbar-brand" href="http://catfordstreettrees.org.uk" target="_blank">
+					<img alt="Catford Street Trees" src="Twitter Avatar.png" style="width:27px;height:27px;border:0;">
+				  </a>
+				  <ul class="nav navbar-nav pull-right hidden-md hidden-lg">
+						<li><a href="#">Lewisham Tree Map</a></li>
+					</ul>
+				</div>
+				<div class="navbar-header pull-right">
+					<ul class="nav navbar-nav pull-left">
+						<li>
+							<a href="https://twitter.com/home?status=Map of Lewisham Trees: maps.catfordstreettrees.org.uk via @se6_trees" target="_blank"><i class="fa fa-lg fa-twitter" style="padding-right: 20px;"></i></a>
+						</li>
+					  </ul>
+				</div>
+				<div class="collapse navbar-collapse">
+					<div class="nav navbar-nav navbar-right">
+						<li>
+							<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=9V3CCGBYH3M8W" target="_blank">
+							  <img src="DonateWithPayPalSmall.png" alt="Donate With PayPal" style="width:140px;height:27px;border:0;">
+							</a>
+						</li>
+					</div>
+					<div class="navbar-title hidden-sm hidden-xs">
+							Lewisham Tree Map
+					</div>
+				</div>               
+			</div>
+        </nav>
+	  </header>
+    </div> <!-- /container -->
+	<div class="cartodb-legend custom hidden-xs">
+		<div class="legend-title">Genus</div>
 			<ul>
-				<li><input type='checkbox' checked=checked class='filter' name='ward' id='Bellingham' value="'Bellingham'"/><label for='Bellingham'>Bellingham</label></li>
-				<li><input type='checkbox' checked=checked class='filter' name='ward' id='Blackheath' value="'Blackheath'"/><label for='Blackheath'>Blackheath</label></li>
-				<li><input type='checkbox' checked=checked class='filter' name='ward' id='Brockley' value="'Brockley'"/><label for='Brockley'>Brockley</label></li>
-				<li><input type='checkbox' checked=checked class='filter' name='ward' id='Catford South' value="'Catford South'"/><label for='Catford South'>Catford South</label></li>
-				<li><input type='checkbox' checked=checked class='filter' name='ward' id='Crofton Park' value="'Crofton Park'"/><label for='Crofton Park'>Crofton Park</label></li>
-				<li><input type='checkbox' checked=checked class='filter' name='ward' id='Downham' value="'Downham'"/><label for='Downham'>Downham</label></li>
-				<li><input type='checkbox' checked=checked class='filter' name='ward' id='Evelyn' value="'Evelyn'"/><label for='Evelyn'>Evelyn</label></li>
-				<li><input type='checkbox' checked=checked class='filter' name='ward' id='Forest Hill' value="'Forest Hill'"/><label for='Forest Hill'>Forest Hill</label></li>
-				<li><input type='checkbox' checked=checked class='filter' name='ward' id='Grove Park' value="'Grove Park'"/><label for='Grove Park'>Grove Park</label></li>
-				<li><input type='checkbox' checked=checked class='filter' name='ward' id='Ladywell' value="'Ladywell'"/><label for='Ladywell'>Ladywell</label></li>
-				<li><input type='checkbox' checked=checked class='filter' name='ward' id='Lee Green' value="'Lee Green'"/><label for='Lee Green'>Lee Green</label></li>
-				<li><input type='checkbox' checked=checked class='filter' name='ward' id='Lewisham Central' value="'Lewisham Central'"/><label for='Lewisham Central'>Lewisham Central</label></li>
-				<li><input type='checkbox' checked=checked class='filter' name='ward' id='New Cross' value="'New Cross'"/><label for='New Cross'>New Cross</label></li>
-				<li><input type='checkbox' checked=checked class='filter' name='ward' id='Perry Vale' value="'Perry Vale'"/><label for='Perry Vale'>Perry Vale</label></li>
-				<li><input type='checkbox' checked=checked class='filter' name='ward' id='Rushey Green' value="'Rushey Green'"/><label for='Rushey Green'>Rushey Green</label></li>
-				<li><input type='checkbox' checked=checked class='filter' name='ward' id='Sydenham' value="'Sydenham'"/><label for='Sydenham'>Sydenham</label></li>
-				<li><input type='checkbox' checked=checked class='filter' name='ward' id='Telegraph Hill' value="'Telegraph Hill'"/><label for='Telegraph Hill'>Telegraph Hill</label></li>
-				<li><input type='checkbox' checked=checked class='filter' name='ward' id='Whitefoot' value="'Whitefoot'"/><label for='Whitefoot'>Whitefoot</label></li>
-				</li> 
+				<li>		<div class="bullet" style="background:#b92839"></div><label for='Cherry' class='genus cherry'>Cherry</label></li>
+				<li>		<div class="bullet" style="background:#ea941d"></div><label for='Maple' class='genus maple'>Maple</label></li>
+				<li>		<div class="bullet" style="background:#236148"></div><label for='Lime' class='genus lime'>Lime</label></li>
+				<li>		<div class="bullet" style="background:#1223a7"></div><label for='Plane' class='genus plane'>Plane</label></li>
+				<li>		<div class="bullet" style="background:#8cbc2a"></div><label for='Rowan' class='genus rowan'>Rowan</label></li>
+				<li>		<div class="bullet" style="background:#e7c83a"></div><label for='Ash' class='genus ash'>Ash</label></li>
+				<li>		<div class="bullet" style="background:#6995e0"></div><label for='Birch' class='genus birch'>Birch</label></li>
+				<li>		<div class="bullet" style="background:#5c442c"></div><label for='Oak' class='genus oak'>Oak</label></li>
+				<li>		<div class="bullet" style="background:#9b2ea5"></div><label for='Hawthorn' class='genus hawthorn'>Hawthorn</label></li>
+				<li>		<div class="bullet" style="background:#4e6c08"></div><label for='Horse-chestnut' class='genus horse-chestnut'>Horse-chestnut</label></li>
+				<li>		<div class="bullet" style="background:#4a133b"></div><label for='Poplar' class='genus poplar'>Poplar</label></li>
+				<li>		<div class="bullet" style="background:#6c47a4"></div><label for='Locust' class='genus locust'>Locust</label></li>
+				<li>		<div class="bullet" style="background:#dea3b9"></div><label for='Apple' class='genus apple'>Apple</label></li>
+				<li>		<div class="bullet" style="background:#878a91"></div><label for='Other' class='genus other'>Other</label></li>
 			</ul>
-        </div>
-		<div id="genus" class="layer_selector">
-			<p><input type='checkbox' checked=checked class='filter' name='select-all' id='select-all-genus' value='genus'/> Genus</p>
-			<ul>
-				<li><input type='checkbox' checked=checked class='filter' name='genus' id='Cherry' value="'Cherry'"/><label for='Cherry' class='cherry'>Cherry</label></li>
-				<li><input type='checkbox' checked=checked class='filter' name='genus' id='Maple' value="'Maple'"/><label for='Maple' class='maple'>Maple</label></li>
-				<li><input type='checkbox' checked=checked class='filter' name='genus' id='Lime' value="'Lime'"/><label for='Lime' class='lime'>Lime</label></li>
-				<li><input type='checkbox' checked=checked class='filter' name='genus' id='Plane' value="'Plane'"/><label for='Plane' class= 'plane'>Plane</label></li>
-				<li><input type='checkbox' checked=checked class='filter' name='genus' id='Rowan' value="'Rowan'"/><label for='Rowan' class= 'rowan'>Rowan</label></li>
-				<li><input type='checkbox' checked=checked class='filter' name='genus' id='Ash' value="'Ash'"/><label for='Ash' class= 'ash'>Ash</label></li>
-				<li><input type='checkbox' checked=checked class='filter' name='genus' id='Birch' value="'Birch'"/><label for='Birch' class='birch'>Birch</label></li>
-				<li><input type='checkbox' checked=checked class='filter' name='genus' id='Oak' value="'Oak'"/><label for='Oak' class='oak'>Oak</label></li>
-				<li><input type='checkbox' checked=checked class='filter' name='genus' id='Hawthorn' value="'Hawthorn'"/><label for='Hawthorn' class='hawthorn'>Hawthorn</label></li>
-				<li><input type='checkbox' checked=checked class='filter' name='genus' id='Horse-chestnut' value="'Horse-chestnut'"/><label for='Horse-chestnut' class='horse-chestnut'>Horse-chestnut</label></li>
-				<li><input type='checkbox' checked=checked class='filter' name='genus' id='Poplar' value="'Poplar'"/><label for='Poplar' class='poplar'>Poplar</label></li>
-				<li><input type='checkbox' checked=checked class='filter' name='genus' id='Locust' value="'Locust'"/><label for='Locust' class='locust'>Locust</label></li>
-				<li><input type='checkbox' checked=checked class='filter' name='genus' id='Apple' value="'Apple'"/><label for='Apple' class='apple'>Apple</label></li>
-				<li><input type='checkbox' checked=checked class='filter' name='genus' id='Other' value="'Other'"/><label for='Other' class='other'>Other</label></li>
-			</ul>
-		</div>
-		<div id="age" class="layer_selector">
-			<p><input type='checkbox' checked=checked class='filter' name='select-all' id='select-all-age' value='age'/> Age</p>
-			<ul>
-				<li><input type='checkbox' checked=checked class='filter' name='age' id='Young' value="'Young'"/><label for='Young'>Young</label></li>
-				<li><input type='checkbox' checked=checked class='filter' name='age' id='Semi Mature' value="'Semi Mature'"/><label for='Semi Mature'>Semi Mature</label></li>
-				<li><input type='checkbox' checked=checked class='filter' name='age' id='Mature' value="'Mature'"/><label for='Mature'>Mature</label></li>
-				<li><input type='checkbox' checked=checked class='filter' name='age' id='Established' value="'Established'"/><label for='Established'>Established</label></li>
-				<li><input type='checkbox' checked=checked class='filter' name='age' id='Over Mature' value="'Over Mature'"/><label for='Over Mature'>Over Mature</label></li>
-				<li><input type='checkbox' checked=checked class='filter' name='age' id='Not Recorded' value="''"/><label for='Not Recorded'>Not Recorded</label></li>
-			</ul>
-		</div>
-		<div id="condition" class="layer_selector">
-			<p><input type='checkbox' checked=checked class='filter' name='select-all' id='select-all-condition' value='condition'/> Condition</p>
-			<ul>
-				<li><input type='checkbox' checked=checked class='filter' name='condition' id='Good' value="'Good'"/><label for='Good'>Good</label></li>
-				<li><input type='checkbox' checked=checked class='filter' name='condition' id='Reasonable' value="'Reasonable'"/><label for='Reasonable'>Reasonable</label></li>
-				<li><input type='checkbox' checked=checked class='filter' name='condition' id='Poor' value="'Poor'"/><label for='Poor'>Poor</label></li>
-				<li><input type='checkbox' checked=checked class='filter' name='condition' id='Reinstated' value="'Reinstated'"/><label for='Reinstated'>Reinstated</label></li>
-				<li><input type='checkbox' checked=checked class='filter' name='condition' id='Not Recorded' value="''"/><label for='Not Recorded'>Not Recorded</label></li>
-			</ul>
-		</div>
-		<div id="category" class="layer_selector">
-			<p><input type='checkbox' checked=checked class='filter' name='select-all' id='select-all-category' value='category'/> Category</p>
-			<ul>
-				<li><input type='checkbox' checked=checked class='filter' name='category' id='Street Tree' value="'Street'"/><label for='Street Tree'>Street Tree</label></li>
-				<li><input type='checkbox' checked=checked class='filter' name='category' id='Park Tree' value="'Park'"/><label for='Park Tree'>Park Tree</label></li>
-				<li><input type='checkbox' checked=checked class='filter' name='category' id='Other' value="'Other'"/><label for='Other Category'>Other</label></li>
-			</ul>
-		</div>
-		<div id="colours" class="layer_selector">
-			<ul>
-				<li data="single_colour" data-type="cartocss" class='cartocss_selected'>Single Colour</li>
-				<li data="species_colours" data-type="cartocss">Per Species Colour</li>
-			</ul>
-		</div>
-		<div id="home-link">
-		<input type="button" class='homebutton' onclick="location.href='http://catfordstreettrees.org.uk';" value="Return to catfordstreettrees.org.uk" />
-		</div>
+	</div>
+	
+   <div class="container">
+	 <footer>
+      <!--<div class="header">-->
+		<nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
+                <div class="container">
+					<div class="navbar-header">
+					  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#filterNavbar">
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>                  
+					  </button>
+					</div>
+					<div class="collapse navbar-collapse" id='filterNavbar'>
+					<div class="nav navbar-nav navbar-left">
+						<div class="btn-group btn-group-sm navbar-btn" role="group" data-toggle="buttons" name='css_selection'>
+						  <label class="btn btn-default active cartocss_selected" data="single_colour" data-type="cartocss" name="css_selection">
+							<input type="radio" name="css_selection" id="option1" data="single_colour" autocomplete="off" checked> Single Colour
+						  </label>
+						  <label class="btn btn-default" data="species_colours" data-type="cartocss" name="css_selection">
+							<input type="radio" name="css_selection" id="option2" data="species_colours" autocomplete="off"> Per Species Colour
+						  </label>
+						</div>
+					</div>
+                    <div class="nav navbar-nav navbar-right">
+						<li class="dropdown" name="filterDropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Ward	<span class="caret"></span></a>
+							<ul class="dropdown-menu dropdown-menu-left">
+								<li class="select-all"><input type='checkbox' checked=checked class='filter' name='select-all' id='select-all-ward' value='ward'/> <label for='ward'>Select All</label></li>
+								<li role="separator" class="divider"></li>
+								<li><input type='checkbox' checked=checked class='filter' name='ward' id='Bellingham' value="'Bellingham'"/><label for='Bellingham'>Bellingham</label></li>
+								<li><input type='checkbox' checked=checked class='filter' name='ward' id='Blackheath' value="'Blackheath'"/><label for='Blackheath'>Blackheath</label></li>
+								<li><input type='checkbox' checked=checked class='filter' name='ward' id='Brockley' value="'Brockley'"/><label for='Brockley'>Brockley</label></li>
+								<li><input type='checkbox' checked=checked class='filter' name='ward' id='Catford South' value="'Catford South'"/><label for='Catford South'>Catford South</label></li>
+								<li><input type='checkbox' checked=checked class='filter' name='ward' id='Crofton Park' value="'Crofton Park'"/><label for='Crofton Park'>Crofton Park</label></li>
+								<li><input type='checkbox' checked=checked class='filter' name='ward' id='Downham' value="'Downham'"/><label for='Downham'>Downham</label></li>
+								<li><input type='checkbox' checked=checked class='filter' name='ward' id='Evelyn' value="'Evelyn'"/><label for='Evelyn'>Evelyn</label></li>
+								<li><input type='checkbox' checked=checked class='filter' name='ward' id='Forest Hill' value="'Forest Hill'"/><label for='Forest Hill'>Forest Hill</label></li>
+								<li><input type='checkbox' checked=checked class='filter' name='ward' id='Grove Park' value="'Grove Park'"/><label for='Grove Park'>Grove Park</label></li>
+								<li><input type='checkbox' checked=checked class='filter' name='ward' id='Ladywell' value="'Ladywell'"/><label for='Ladywell'>Ladywell</label></li>
+								<li><input type='checkbox' checked=checked class='filter' name='ward' id='Lee Green' value="'Lee Green'"/><label for='Lee Green'>Lee Green</label></li>
+								<li><input type='checkbox' checked=checked class='filter' name='ward' id='Lewisham Central' value="'Lewisham Central'"/><label for='Lewisham Central'>Lewisham Central</label></li>
+								<li><input type='checkbox' checked=checked class='filter' name='ward' id='New Cross' value="'New Cross'"/><label for='New Cross'>New Cross</label></li>
+								<li><input type='checkbox' checked=checked class='filter' name='ward' id='Perry Vale' value="'Perry Vale'"/><label for='Perry Vale'>Perry Vale</label></li>
+								<li><input type='checkbox' checked=checked class='filter' name='ward' id='Rushey Green' value="'Rushey Green'"/><label for='Rushey Green'>Rushey Green</label></li>
+								<li><input type='checkbox' checked=checked class='filter' name='ward' id='Sydenham' value="'Sydenham'"/><label for='Sydenham'>Sydenham</label></li>
+								<li><input type='checkbox' checked=checked class='filter' name='ward' id='Telegraph Hill' value="'Telegraph Hill'"/><label for='Telegraph Hill'>Telegraph Hill</label></li>
+								<li><input type='checkbox' checked=checked class='filter' name='ward' id='Whitefoot' value="'Whitefoot'"/><label for='Whitefoot'>Whitefoot</label></li>
+							</ul>
+						</li>
+						<li class="dropdown" name="filterDropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Genus	<span class="caret"></span></a>
+							<ul class="dropdown-menu dropdown-menu-left">
+								<li><input type='checkbox' checked=checked class='filter' name='select-all' id='select-all-genus' value='genus'/> <label for='genus'>Select All</label></li>
+								<li role="separator" class="divider"></li>
+								<li><input type='checkbox' checked=checked class='filter' name='genus' id='Cherry' value="'Cherry'"/><label for='Cherry' class='genus cherry'>Cherry</label></li>
+								<li><input type='checkbox' checked=checked class='filter' name='genus' id='Maple' value="'Maple'"/><label for='Maple' class='genus maple'>Maple</label></li>
+								<li><input type='checkbox' checked=checked class='filter' name='genus' id='Lime' value="'Lime'"/><label for='Lime' class='genus lime'>Lime</label></li>
+								<li><input type='checkbox' checked=checked class='filter' name='genus' id='Plane' value="'Plane'"/><label for='Plane' class= 'genus plane'>Plane</label></li>
+								<li><input type='checkbox' checked=checked class='filter' name='genus' id='Rowan' value="'Rowan'"/><label for='Rowan' class= 'genus rowan'>Rowan</label></li>
+								<li><input type='checkbox' checked=checked class='filter' name='genus' id='Ash' value="'Ash'"/><label for='Ash' class= 'genus ash'>Ash</label></li>
+								<li><input type='checkbox' checked=checked class='filter' name='genus' id='Birch' value="'Birch'"/><label for='Birch' class='genus birch'>Birch</label></li>
+								<li><input type='checkbox' checked=checked class='filter' name='genus' id='Oak' value="'Oak'"/><label for='Oak' class='genus oak'>Oak</label></li>
+								<li><input type='checkbox' checked=checked class='filter' name='genus' id='Hawthorn' value="'Hawthorn'"/><label for='Hawthorn' class='genus hawthorn'>Hawthorn</label></li>
+								<li><input type='checkbox' checked=checked class='filter' name='genus' id='Horse-chestnut' value="'Horse-chestnut'"/><label for='Horse-chestnut' class='genus horse-chestnut'>Horse-chestnut</label></li>
+								<li><input type='checkbox' checked=checked class='filter' name='genus' id='Poplar' value="'Poplar'"/><label for='Poplar' class='genus poplar'>Poplar</label></li>
+								<li><input type='checkbox' checked=checked class='filter' name='genus' id='Locust' value="'Locust'"/><label for='Locust' class='genus locust'>Locust</label></li>
+								<li><input type='checkbox' checked=checked class='filter' name='genus' id='Apple' value="'Apple'"/><label for='Apple' class='genus apple'>Apple</label></li>
+								<li><input type='checkbox' checked=checked class='filter' name='genus' id='Other' value="'Other'"/><label for='Other' class='genus other'>Other</label></li> 
+							</ul>
+						</li>
+						<li class="dropdown" name="filterDropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Age	<span class="caret"></span></a>
+							<ul class="dropdown-menu dropdown-menu-left">
+								<li><input type='checkbox' checked=checked class='filter' name='select-all' id='select-all-age' value='age'/> <label for='age'>Select All</label></li>
+								<li role="separator" class="divider"></li>
+								<li><input type='checkbox' checked=checked class='filter' name='age' id='Young' value="'Young'"/><label for='Young'>Young</label></li>
+								<li><input type='checkbox' checked=checked class='filter' name='age' id='Semi Mature' value="'Semi Mature'"/><label for='Semi Mature'>Semi Mature</label></li>
+								<li><input type='checkbox' checked=checked class='filter' name='age' id='Mature' value="'Mature'"/><label for='Mature'>Mature</label></li>
+								<li><input type='checkbox' checked=checked class='filter' name='age' id='Established' value="'Established'"/><label for='Established'>Established</label></li>
+								<li><input type='checkbox' checked=checked class='filter' name='age' id='Over Mature' value="'Over Mature'"/><label for='Over Mature'>Over Mature</label></li>
+								<li><input type='checkbox' checked=checked class='filter' name='age' id='Not Recorded' value="''"/><label for='Not Recorded'>Not Recorded</label></li>
+							</ul>
+						</li>
+						<li class="dropdown" name="filterDropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Condition	<span class="caret"></span></a>
+							<ul class="dropdown-menu dropdown-menu-left">
+								<li><input type='checkbox' checked=checked class='filter' name='select-all' id='select-all-condition' value='condition'/> <label for='condition'>Select All</label></li>
+								<li role="separator" class="divider"></li>
+								<li><input type='checkbox' checked=checked class='filter' name='condition' id='Good' value="'Good'"/><label for='Good'>Good</label></li>
+								<li><input type='checkbox' checked=checked class='filter' name='condition' id='Reasonable' value="'Reasonable'"/><label for='Reasonable'>Reasonable</label></li>
+								<li><input type='checkbox' checked=checked class='filter' name='condition' id='Poor' value="'Poor'"/><label for='Poor'>Poor</label></li>
+								<li><input type='checkbox' checked=checked class='filter' name='condition' id='Reinstated' value="'Reinstated'"/><label for='Reinstated'>Reinstated</label></li>
+								<li><input type='checkbox' checked=checked class='filter' name='condition' id='Not Recorded' value="''"/><label for='Not Recorded'>Not Recorded</label></li>
+							</ul>
+						</li>
+						<li class="dropdown" name="filterDropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Category	<span class="caret"></span></a>
+							<ul class="dropdown-menu dropdown-menu-right">
+								<li><input type='checkbox' checked=checked class='filter' name='select-all' id='select-all-category' value='category'/> <label for='category'>Select All</label></li>
+								<li role="separator" class="divider"></li>
+								<li><input type='checkbox' checked=checked class='filter' name='category' id='Street Tree' value="'Street'"/><label for='Street Tree'>Street Tree</label></li>
+								<li><input type='checkbox' checked=checked class='filter' name='category' id='Park Tree' value="'Park'"/><label for='Park Tree'>Park Tree</label></li>
+								<li><input type='checkbox' checked=checked class='filter' name='category' id='Other' value="'Other'"/><label for='Other Category'>Other</label></li>
+							</ul>
+						</li>		
+                    </div>
+                 
+                   
+				</div>
+                </div>
+        </nav>
+      <!--</div>-->
+	  </footer>
+    </div> <!-- /container -->
+	
+	
         <!-- include cartodb.js library -->
         <script src="http://libs.cartocdn.com/cartodb.js/v3/3.14/cartodb.js" type="text/javascript"></script>
         <!-- Place your code in the script tags below -->
-        <script type="text/javascript">
-        window.onload = function() {
-            // var tableName = "all_day_cdb_gu_l3";
-            var tableName = "lewisham_tree_map";
-            var layerSource = {
-                    user_name: 'catfordstreettrees',
-                    type: 'cartodb',
-                    sublayers: [{
-                        sql: "SELECT * FROM " + tableName, // Tree Data
-                        cartocss: $("#single_colour").html() // Simple visualization
-                    }]
-            }
-            // Create layer selector
-            function createSelector(layer) {
-				var condition = ""; // SQL or CartoCSS string
-				var $options = $(".layer_selector").find("li");
-				$options.click(function(e) {
-					var $li = $(e.target);
-					var selected = $li.attr('data');
-					var type = $li.data('type'); // 'sql' or 'cartocss'
-
-					if (type === "cartocss") { // if a CartoCSS selector is chosen, set the style
-						$options.removeClass('cartocss_selected');
-						if (selected !== "simple") {
-							$li.addClass('cartocss_selected');
-							$("#switch_style").attr("href", selected + ".css");
-						}
-						condition = $('#'+selected).text();
-						layer.setCartoCSS(condition);
-					} else { // if a SQL selector is chosen, re-query the data
-						$options.removeClass('sql_selected');
-						if (selected !== "") {
-							$li.addClass('sql_selected');
-						}
-						//layer.setSQL("SELECT * FROM " + tableName + selected);
-					}
-				});
-				var $options1 = $(".layer_selector").find("input");
-				var sql = new cartodb.SQL({ user: 'catfordstreettrees' });
-				$options1.click(function showSelectedValues() {
-					var selected_genus = $("input[name=genus]:checked").map(function () {return this.value;}).get().join(",");
-					var selected_ward = $("input[name=ward]:checked").map(function () {return this.value;}).get().join(",");
-					var selected_age = $("input[name=age]:checked").map(function () {return this.value;}).get().join(",");
-					var selected_condition = $("input[name=condition]:checked").map(function () {return this.value;}).get().join(",");
-					var selected_category = $("input[name=category]:checked").map(function () {return this.value;}).get().join(",");
-					//console.log(!selected_genus || !selected_ward || !selected_age || !selected_condition || !selected_category);
-					//test none of the filters are blank, i.e. all unselected
-					if((!selected_genus || !selected_ward || !selected_age || !selected_condition || !selected_category) === false) {
-						var sqlString1 = "with genus_label as (select distinct genus from " + tableName +  "), " +
-										 "tree_count as (select genus, count(*) from " + tableName + " " +
-										 "where ward in (" + selected_ward + ") " +
-										 "and age in (" + selected_age + ") " +
-										 "and condition in (" + selected_condition + ") " +
-										 "and category in (" + selected_category + ") " +
-										 "group by genus) " +
-										 "select genus_label.genus, " +
-										 "CASE WHEN tree_count.count is null THEN 0 ELSE tree_count.count END " +
-										 "FROM genus_label " +
-										 "left outer join tree_count " +
-										 "on genus_label.genus = tree_count.genus ";
-						//console.log(sqlString1);
-						//sql.execute("select genus, count(*) FROM "+ tableName +" where ward in (" + selected_ward + ") and age in (" + selected_age + ") and condition in (" + selected_condition + ") and category in (" + selected_category + ") group by genus")
-						sql.execute(sqlString1)
-						.done(function(data) {
-							for (var i = 0; i < data.total_rows; i++) {
-							  $("label[for = " + data.rows[i].genus +"]").text(data.rows[i].genus + " - " + data.rows[i].count);
-							}
-						});
-						//alert(selected_genus);
-						//alert($("input[name=genus]:checked").map(
-						 //function () {return this.value;}).get().join(","));
-						var sqlString = "SELECT * FROM " + tableName + " WHERE genus IN (" + selected_genus + ") AND ward IN (" + selected_ward + ") AND age IN (" + selected_age + ") AND condition IN (" + selected_condition + ") AND category IN (" + selected_category + ")";
-						//alert(sqlString);
-						layer.setSQL(sqlString);
-						sql.getBounds(sqlString).done(function(bounds) {
-						  //map_object.setBounds(bounds);
-						  //console.log(bounds);
-						  map_object.fitBounds(bounds,{paddingBottomRight:[420,0]});
-						});
-					}
-				});
-			}
-            // Instantiate new map object, place it in 'map' element
-            var map_object = new L.Map('map', {
-                center: [51.4531,0.0486], // Lewisham, London
-                zoom: 13,
-				fullscreenControl: true,
-				shareable: true
-            });
-            // Pull tiles from CartoDB's basemaps
-			//L.tileLayer('http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png',{
-            L.tileLayer('https://a.tiles.mapbox.com/v4/catfordstreettrees.6a4f6911/{z}/{x}/{y}.png?access_token={token}', {
-			//L.tileLayer('https://a.tiles.mapbox.com/v4/mapbox.light/{z}/{x}/{y}.png?access_token={token}', {			
-                attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-				token: 'pk.eyJ1IjoiY2F0Zm9yZHN0cmVldHRyZWVzIiwiYSI6IjQ2ZjQ3MjE0Y2RlMjc0MTA1YmQwOGRjMTk4MDExMDU3In0.3Zb9rrfLQNJOne4iw01YUQ',
-				maxZoom: 18,
-				minZoom: 10
-            }).addTo(map_object);
-            // for storing sublayer outside of createlayer
-            var sublayer;
-            // Add data layer to your map
-            cartodb.createLayer(map_object,layerSource)
-                .addTo(map_object)
-                .done(function(layer) {
-                    sublayer = layer.getSubLayer(0);
-					//sublayer.set(subLayerOptions);
-					//sublayer.infowindow.set('template', $('#infowindow_template').html());			
-					//sublayer.on('featureClick', function(e, latlng, pos, data) {alert("Hey! You clicked " + data.cartodb_id);});
-					//cdb.vis.Vis.addInfowindow(map_object, layer.getSubLayer(0), ['cartodb_id'])
-					cdb.vis.Vis.addInfowindow(map_object, sublayer, ['genus','species_botanical','ward','age','condition','height'], {
-					 // we provide a nice default template, if you want yours uncomment this
-					 infowindowTemplate: $('#infowindow_template').html()
-				   });
-				   sublayer.setInteraction(true);
-							
-                    createSelector(sublayer);
-                })
-                .error(function(err) {
-                    console.log("error: " + err);
-                });
-			
-			var sql = new cartodb.SQL({ user: 'catfordstreettrees' });
-			var selected_ward = $("input[name=ward]:checked").map(function () {return this.value;}).get().join(",");
-					sql.execute("select genus, count(*) FROM "+ tableName +" where ward in (" + selected_ward + ") group by genus")
-					.done(function(data) {
-						for (var i = 0; i < data.total_rows; i++) {
-						  $("label[for = " + data.rows[i].genus +"]").text(data.rows[i].genus + " - " + data.rows[i].count);
-						}
-					});
-			
-			var sql1 = new cartodb.SQL({ user: 'catfordstreettrees' });
-			sql1.getBounds("select * from " + tableName).done(function(bounds) {
-			  //map_object.setBounds(bounds);
-			  //console.log(bounds);
-			  map_object.fitBounds(bounds,{paddingBottomRight:[420,0]});
-			});
-
-            };
-		// Listen for click on toggle checkbox
-				$('input[name=select-all]').click(function(event) {
-					var selectallvalue = this.value;
-					if(this.checked) {
-						// Iterate each checkbox
-						$('input[name= ' + selectallvalue + ']').each(function() {
-							this.checked = true;					
-						});
-					}
-					 else {
-						$('input[name= ' + selectallvalue + ']').each(function() {
-							this.checked = false;
-						});
-					  }
-				});
-        </script>
+        <script src="treemap.js" type="text/javascript"></script>
     </body>
 </html>
