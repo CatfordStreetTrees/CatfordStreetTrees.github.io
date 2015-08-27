@@ -19,17 +19,84 @@
 				});
 			  }
 		});
+		// Interpret URL parameters
+		function GetQueryStringParams(sParam)
+		{
+			var sPageURL = window.location.search.substring(1);
+			var sURLVariables = sPageURL.split('&');
+			var sParams = [];
+			for (var i = 0; i < sURLVariables.length; i++)
+			{
+				var sParameterName = sURLVariables[i].split('=');
+				//console.log(sParameterName);
+				if (sParameterName[0] === sParam){
+					sParams.push(sParameterName[1].replace("%20"," "));
+				}		
+			};
+			if (sParams.length === 0) {return};
+			//Uncheck 'select-all' checkbox if param available
+			$('input[id=select-all-' + sParam + ']').each(function() {
+				this.checked = false;
+			});
+			// Iterate each checkbox & uncheck, e.g. all ward checkboxes
+			//alert(sParams.indexOf("Forest Hill"));
+			//console.log(sParams);
+			$('input[name= ' + sParam + ']').each(function() {
+				var inputId = this.id;
+				if (sParams.indexOf(inputId) > -1){
+					this.checked = true;
+				}
+				else
+				{
+				this.checked = false;
+				};
+			});
+			var QueryString = sParam + " in ('" + sParams.join("','") + "')";
+			QueryString = QueryString.replace("Not Recorded","");
+			return QueryString;
+		};
 		window.onload = function() {
+			var attr = ["ward","genus","age","condition","category"];
+			var QueryStrings = [];
+			$.each(attr, function(i,value) {
+				var QueryString = GetQueryStringParams(value);
+				if (QueryString != undefined) {
+					QueryStrings.push(QueryString);
+					console.log(QueryStrings)
+				}
+			});
+			var tableName = "lewisham_tree_map";
+			//console.log(typeof QueryStrings);
+			console.log(QueryStrings.length);
+			console.log(!QueryStrings);
+			if (QueryStrings.length > 0) {
+				var sqlString1 = "select * from " + tableName + " where " + QueryStrings.join(" and ");
+				var sqlString2 = "with genus_label as (select distinct genus from " + tableName +  "), " +
+												 "tree_count as (select genus, count(*) from " + tableName + " " +
+												 "where " + QueryStrings.join(" and ") +
+												 " group by genus) " +
+												 "select genus_label.genus, " +
+												 "CASE WHEN tree_count.count is null THEN 0 ELSE tree_count.count END " +
+												 "FROM genus_label " +
+												 "left outer join tree_count " +
+												 "on genus_label.genus = tree_count.genus ";
+			} else {
+				var sqlString1 = "select * from " + tableName;
+				var sqlString2 = "select genus, count(*) FROM "+ tableName +" where ward is not null group by genus";
+			}
+			console.log(sqlString2);
             // var tableName = "all_day_cdb_gu_l3";
-            var tableName = "lewisham_tree_map";
+            
             var layerSource = {
                     user_name: 'catfordstreettrees',
                     type: 'cartodb',
                     sublayers: [{
-                        sql: "SELECT * FROM " + tableName, // Tree Data
+                        //sql: "SELECT * FROM " + tableName, // Tree Data
+						sql: sqlString1,
                         cartocss: $("#single_colour").html() // Simple visualization
                     }]
             }
+
 			// Create layer selector
             function createSelector(layer) {
 				// Swap CartoCSS
@@ -129,7 +196,8 @@
 			
 			var sql = new cartodb.SQL({ user: 'catfordstreettrees' });
 			var selected_ward = $("input[name=ward]:checked").map(function () {return this.value;}).get().join(",");
-					sql.execute("select genus, count(*) FROM "+ tableName +" where ward in (" + selected_ward + ") group by genus")
+					//sql.execute("select genus, count(*) FROM "+ tableName +" where ward in (" + selected_ward + ") group by genus")
+					sql.execute(sqlString2)
 					.done(function(data) {
 						for (var i = 0; i < data.total_rows; i++) {
 						  $("label[for = " + data.rows[i].genus +"]").text(data.rows[i].genus + " - " + data.rows[i].count);
@@ -137,7 +205,7 @@
 					});
 			
 			var sql1 = new cartodb.SQL({ user: 'catfordstreettrees' });
-			sql1.getBounds("select * from " + tableName).done(function(bounds) {
+			sql1.getBounds(sqlString1).done(function(bounds) {
 			  //map_object.setBounds(bounds);
 			  //console.log(bounds);
 			  map_object.fitBounds(bounds);
