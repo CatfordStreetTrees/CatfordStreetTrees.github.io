@@ -65,7 +65,7 @@
 					console.log(QueryStrings)
 				}
 			});
-			var tableName = "lewisham_tree_map";
+			var tableName = "lewisham_tree_data_2016";
 			//console.log(typeof QueryStrings);
 			console.log(QueryStrings.length);
 			console.log(!QueryStrings);
@@ -81,8 +81,8 @@
 												 "left outer join tree_count " +
 												 "on genus_label.genus = tree_count.genus ";
 			} else {
-				var sqlString1 = "select * from " + tableName;
-				var sqlString2 = "select genus, count(*) FROM "+ tableName +" where ward is not null group by genus";
+				var sqlString1 = "select * from " + tableName + " where data_date in (3,2)";
+				var sqlString2 = "select genus, count(*) FROM "+ tableName +" where ward is not null and data_date in (3,2) group by genus";
 			}
 			console.log(sqlString2);
             // var tableName = "all_day_cdb_gu_l3";
@@ -110,13 +110,21 @@
 					console.log(condition);
 					})
 				//var $options1 = $(".layer_selector").find("input");
+				
 				var sql = new cartodb.SQL({ user: 'catfordstreettrees' });
-				$('input.filter').click(function showSelectedValues() {
+				$('label[name=year_selection]').on('click', function () { 
+					showSelectedValues()
+					});
+				$('input.filter').on('click', function () { 
+					showSelectedValues()
+					});
+				function showSelectedValues() {
 							var selected_genus = $("input[name=genus]:checked").map(function () {return this.value;}).get().join(",");
 							var selected_ward = $("input[name=ward]:checked").map(function () {return this.value;}).get().join(",");
 							var selected_age = $("input[name=age]:checked").map(function () {return this.value;}).get().join(",");
 							var selected_condition = $("input[name=condition]:checked").map(function () {return this.value;}).get().join(",");
 							var selected_category = $("input[name=category]:checked").map(function () {return this.value;}).get().join(",");
+							var selected_year = $("input[name=year_selection]:checked").map(function () {return this.value;}).get().join(",");
 							//console.log(!selected_genus || !selected_ward || !selected_age || !selected_condition || !selected_category);
 							//test none of the filters are blank, i.e. all unselected
 							if((!selected_genus || !selected_ward || !selected_age || !selected_condition || !selected_category) === false) {
@@ -126,6 +134,7 @@
 												 "and age in (" + selected_age + ") " +
 												 "and condition in (" + selected_condition + ") " +
 												 "and category in (" + selected_category + ") " +
+												 "and data_date in (3," + selected_year + ") " +
 												 "group by genus) " +
 												 "select genus_label.genus, " +
 												 "CASE WHEN tree_count.count is null THEN 0 ELSE tree_count.count END " +
@@ -143,7 +152,7 @@
 								//alert(selected_genus);
 								//alert($("input[name=genus]:checked").map(
 								 //function () {return this.value;}).get().join(","));
-								var sqlString = "SELECT * FROM " + tableName + " WHERE genus IN (" + selected_genus + ") AND ward IN (" + selected_ward + ") AND age IN (" + selected_age + ") AND condition IN (" + selected_condition + ") AND category IN (" + selected_category + ")";
+								var sqlString = "SELECT * FROM " + tableName + " WHERE genus IN (" + selected_genus + ") AND ward IN (" + selected_ward + ") AND age IN (" + selected_age + ") AND condition IN (" + selected_condition + ") AND category IN (" + selected_category + ") AND data_date in (3," + selected_year + ")";
 								//alert(sqlString);
 								layer.setSQL(sqlString);
 								sql.getBounds(sqlString).done(function(bounds) {
@@ -153,7 +162,7 @@
 								 map_object.fitBounds(bounds);
 								});
 							}
-						});
+						};
 			}
             // Instantiate new map object, place it in 'map' element
             var map_object = new L.Map('map', {
