@@ -60,3 +60,6 @@
 			div.cartodb-legend {
 				bottom: 90px !important;
 			}
+			.btn.disabled {
+				pointer-events: all !important;
+			}

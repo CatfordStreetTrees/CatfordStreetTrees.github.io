@@ -4,6 +4,12 @@
 		  e.stopPropagation();
 		}
 	});
+	
+	// Tooltips
+		$(function () {
+	  $('[data-toggle="tooltip"]').tooltip()
+	})
+	
 	// Listen for click on toggle checkbox
 		$('input[name=select-all]').click(function(event) {
 			var selectallvalue = this.value;
