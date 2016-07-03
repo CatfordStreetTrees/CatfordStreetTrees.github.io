@@ -197,7 +197,7 @@
 					//sublayer.infowindow.set('template', $('#infowindow_template').html());			
 					//sublayer.on('featureClick', function(e, latlng, pos, data) {alert("Hey! You clicked " + data.cartodb_id);});
 					//cdb.vis.Vis.addInfowindow(map_object, layer.getSubLayer(0), ['cartodb_id'])
-					cdb.vis.Vis.addInfowindow(map_object, sublayer, ['arbortrack_id','genus','species_botanical','ward','age','condition','height'], {
+					cdb.vis.Vis.addInfowindow(map_object, sublayer, ['arbortrack_id','genus','species_botanical','ward','age','condition','height','wiki_link'], {
 					 // we provide a nice default template, if you want yours uncomment this
 					 //infowindowTemplate: $('#infowindow_template').html()
 				   });
