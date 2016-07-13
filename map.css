@@ -53,13 +53,88 @@
 			.cartodb-logo {
 				z-index:0 !important; 
 			}
+			div.cartodb-popup {
+				width: 330px !important;
+				/*background:url('infowindowoutline.png') no-repeat -300px -50px !important;*/
+			}
+			
 			div.cartodb-popup div.cartodb-popup-content-wrapper {
-				width: auto !important;
+				width: 330px !important;
+				max-width: none !important;
+				/*background:url('infowindowoutline.png') repeat-y -600px 0 !important;*/
+			}
+			div.cartodb-popup div.cartodb-popup-content {
+				width: 100% !important;
 				max-width: none !important;
 			}
+			
+			div.cartodb-popup div.cartodb-popup-tip-container {
+				width:330px !important;
+				height:20px;
+				/*background:url('infowindowoutline.png') no-repeat 0 0 !important;*/
+			}
+			
+			div.cartodb-popup div.cartodb-popup-top-container {
+				width:330px !important;
+				height:20px;
+				/*background:url('infowindowoutline.png') no-repeat -300px -12px !important;*/
+			}
+			/*
+			div.cartodb-infowindow {
+				width: 300px !important;
+				max-width: none !important;
+			}
+			*/
+			div.cartodb-popup a.cartodb-popup-close-button {
+				/*background:url('infowindowoutline.png') no-repeat 0 -25px !important;*/
+			}
+			
 			div.cartodb-legend {
 				bottom: 90px !important;
 			}
 			.btn.disabled {
 				pointer-events: all !important;
 			}
+			
+			.genus-Cherry {
+			color: #b92839;	
+			}
+			.genus-Maple {
+			color: #ea941d;	
+			}
+			.genus-Lime {
+			color: #236148;	
+			}
+			.genus-Plane {
+			color: #1223a7;	
+			}
+			.genus-Rowan {
+			color: #8cbc2a;	
+			}
+			.genus-Ash {
+			color: #e7c83a;	
+			}
+			.genus-Birch {
+			color: #6995e0;	
+			}
+			.genus-Oak {
+			color: #5c442c;	
+			}
+			.genus-Hawthorn {
+			color: #9b2ea5;	
+			}
+			.genus-Horse-chestnut {
+			color: #4e6c08;	
+			}
+			.genus-Poplar {
+			color: #4a133b;	
+			}
+			.genus-Locust {
+			color: #6c47a4;	
+			}
+			.genus-Apple {
+			color: #dea3b9;	
+			}
+			.genus-Other {
+			color: #878a91;	
+			}	
