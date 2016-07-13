@@ -5,9 +5,50 @@
 		}
 	});
 	
+	
 	// Tooltips
 		$(function () {
 	  $('[data-toggle="tooltip"]').tooltip()
+	})
+	
+	// Treepit Button
+	// Custom infowindow
+      _.extend(cdb.geo.ui.Infowindow.prototype, {
+ 
+        events: function(){
+          return _.extend({},cdb.geo.ui.Infowindow.prototype.events,{
+            'click button#treePitButton': '_onLinkClick',
+			'click a#infoClose': '_onCloseClick'
+          });
+        },
+		 
+        _onLinkClick: function(e) {
+          //console.log(e, this.model, layer);
+		  $('#treePitRequest').modal('show')
+		  //alert("hello")
+          //var i = Math.floor(Math.random() * 6);
+          //layer.setCartoCSS('#layer { marker-fill: ' + colors[i] + ' }')
+        },
+		
+		_onCloseClick: function() {
+			//alert("hello")
+		    $('.cartodb-infowindow').fadeOut()
+			//set('visibility', false);
+            return false;
+          }
+ 
+    });
+	
+	// Modal Window - Register Interest
+	$('#treePitRequest').on('show.bs.modal', function (event) {
+	  var button = $(event.relatedTarget) // Button that triggered the modal
+	  var infoLocationStreet = document.getElementById("infoLocationStreet").innerHTML
+	  var recipient = button.data('whatever') // Extract info from data-* attributes
+	  // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+	  // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+	  var modal = $(this)
+	  modal.find('.modal-title').text('Plant a tree at ' + infoLocationStreet)
+	  modal.find('.modal-body input approx-location').val(infoLocationStreet)
 	})
 	
 	// Listen for click on toggle checkbox
@@ -197,11 +238,30 @@
 					//sublayer.infowindow.set('template', $('#infowindow_template').html());			
 					//sublayer.on('featureClick', function(e, latlng, pos, data) {alert("Hey! You clicked " + data.cartodb_id);});
 					//cdb.vis.Vis.addInfowindow(map_object, layer.getSubLayer(0), ['cartodb_id'])
-					cdb.vis.Vis.addInfowindow(map_object, sublayer, ['arbortrack_id','genus','species_botanical','ward','age','condition','height','wiki_link'], {
+					cdb.vis.Vis.addInfowindow(map_object, sublayer, ['arbortrack_id','genus','species_botanical','ward','age','condition','height','wiki_link','is_treepit','genus_long','category','location','postcode'], {
 					 // we provide a nice default template, if you want yours uncomment this
-					 //infowindowTemplate: $('#infowindow_template').html()
+					 infowindowTemplate: $('#infowindow_template').html()
 				   });
+				   sublayer.set('sanitizeTemplate',false);
 				   sublayer.setInteraction(true);
+				   sublayer.on('featureClick', function(event, latlng, pos, data) {
+				   //alert(data);
+				   console.log(data);
+				   var mapboxAPI = 'https://api.mapbox.com/geocoding/v5/mapbox.places/' + latlng[1] + '%2C%20' + latlng[0] + '.json?types=address&access_token=';
+				   var token = 'pk.eyJ1IjoiY2F0Zm9yZHN0cmVldHRyZWVzIiwiYSI6IjQ2ZjQ3MjE0Y2RlMjc0MTA1YmQwOGRjMTk4MDExMDU3In0.3Zb9rrfLQNJOne4iw01YUQ';
+				   if (data.category == 'Street') {
+				   $.getJSON(mapboxAPI+token, function(data){
+					  console.log(data);
+					  //var address = data.features[0].address + " " + data.features[0].text + ", " + data.features[0].context[1].text;
+					  var address = (data.features[0].place_name).split(",",1);
+					  var postcode = data.features[0].context[1].text;
+					  document.getElementById("infoLocationStreet").innerHTML = address;
+					  document.getElementById("infoLocationPostCode").innerHTML = postcode;
+					});
+					//bar = httpGet('https://api...' + pos);
+					//document.getElementById("foo").innerHTML = bar;
+					}
+					});
 							
                     createSelector(sublayer);
                 })
@@ -225,6 +285,10 @@
 			  //console.log(bounds);
 			  map_object.fitBounds(bounds);
 			});
+			
+		$('.cartdb-infowindow').delegate("#myButton1","click", function(){
+		alert('editing');
+		});
 
             };
 		// Add Legend to map		
