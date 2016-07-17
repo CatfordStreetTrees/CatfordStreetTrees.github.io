@@ -1,2 +1,13 @@
-			 .genus {color: #176407;font-weight: bold;}
-			 div.bullet {background: #176407 !important;}
+			 .genus {
+			 color: #176407;
+			 font-weight: bold;
+			 }
+			 div.bullet {
+			 background: #176407 !important;
+			 }
+			 .tree-pit{
+			 color: #d90026;
+			 }
+			 div.bullet.tree-pit {
+			 background: #d90026 !important;
+			 }
