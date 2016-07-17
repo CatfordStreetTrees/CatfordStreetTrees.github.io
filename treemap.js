@@ -23,7 +23,7 @@
         },
 		 
         _onLinkClick: function(e) {
-          //console.log(e, this.model, layer);
+          ////console.log(e, this.model, layer);
 		  $('#treePitRequest').modal('show')
 		  //alert("hello")
           //var i = Math.floor(Math.random() * 6);
@@ -43,12 +43,55 @@
 	$('#treePitRequest').on('show.bs.modal', function (event) {
 	  var button = $(event.relatedTarget) // Button that triggered the modal
 	  var infoLocationStreet = document.getElementById("infoLocationStreet").innerHTML
+	  var infoLocationPostcode = document.getElementById("infoLocationPostCode").innerHTML
+	  var lat = document.getElementById("lat").innerHTML
+	  var lon = document.getElementById("lon").innerHTML
+	  var arbortrackid = document.getElementById("arbortrackID").innerHTML
 	  var recipient = button.data('whatever') // Extract info from data-* attributes
 	  // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
 	  // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
 	  var modal = $(this)
-	  modal.find('.modal-title').text('Plant a tree at ' + infoLocationStreet)
+	  modal.find('.modal-title').text('Plant a tree at ' + infoLocationStreet + ', ' + infoLocationPostcode)
+	  $('#googleStreetView').attr("src", "http://maps.googleapis.com/maps/api/streetview?size=300x300&location=" + lat +"," + lon + "&pitch=0&fov=120&sensor=false")
+	  $('#miniMap').attr("src", "https://api.mapbox.com/v4/catfordstreettrees.6a4f6911/" + lon + "," + lat + ",17/300x300.png?access_token=pk.eyJ1IjoiY2F0Zm9yZHN0cmVldHRyZWVzIiwiYSI6IjQ2ZjQ3MjE0Y2RlMjc0MTA1YmQwOGRjMTk4MDExMDU3In0.3Zb9rrfLQNJOne4iw01YUQ")
+	  $('#approx-location').attr("placeholder", infoLocationStreet + ', ' + infoLocationPostcode)
+	  $('#approx-location').attr("value", infoLocationStreet + ', ' + infoLocationPostcode)
+	  $('#arbortrack-id').attr("placeholder", arbortrackid)
+	  $('#arbortrack-id').attr("value", arbortrackid)
+	  $('#request-subject').attr("value", arbortrackid + "-" + infoLocationStreet + ', ' + infoLocationPostcode)
 	  modal.find('.modal-body input approx-location').val(infoLocationStreet)
+	})
+	
+	// Submit Modal
+	$(function() {
+		$("button#submit-request").click(function(event){
+		event.preventDefault()
+			$.ajax({
+				type: "POST",
+				url: "https://formspree.io/info@catfordstreettrees.org.uk",
+				data: $('form.tree-request').serializeArray(),
+				dataType: "json",
+				success: function(){
+					$('#treePitRequest').modal('hide');
+					$('#treePitRequestSuccess').modal('show');
+				},
+				error: function(){
+					alert("Sorry, something went wrong. Please try again later.");
+				}
+			   });
+			   //console.log($('form.tree-request').serializeArray())
+		 });
+	});
+	
+	// Request Success Modal
+	$('#treePitRequestSuccess').on('show.bs.modal', function (event) {
+	  var infoLocationStreet = document.getElementById("infoLocationStreet").innerHTML
+	  var infoLocationStreetName = infoLocationStreet.replace(/\d+/g,'')
+	  var infoLocationPostcode = document.getElementById("infoLocationPostCode").innerHTML
+	  var infoLocationPostcodePart = infoLocationPostcode.match(/[A-Z][A-Z]\d*/)
+	  var modal = $(this)
+	  modal.find('#approx-location').text(infoLocationStreet + ', ' + infoLocationPostcode)
+	  $('#twitter-link-success').attr("href", "https://twitter.com/home?status=Proud to be sponsoring a new street tree in" + infoLocationStreetName + ", " + infoLocationPostcodePart + " via @se6_trees @Broc_Soc_Trees")
 	})
 	
 	// Listen for click on toggle checkbox
@@ -75,7 +118,7 @@
 			for (var i = 0; i < sURLVariables.length; i++)
 			{
 				var sParameterName = sURLVariables[i].split('=');
-				//console.log(sParameterName);
+				////console.log(sParameterName);
 				if (sParameterName[0] === sParam){
 					sParams.push(sParameterName[1].replace("%20"," "));
 				}		
@@ -87,7 +130,7 @@
 			});
 			// Iterate each checkbox & uncheck, e.g. all ward checkboxes
 			//alert(sParams.indexOf("Forest Hill"));
-			//console.log(sParams);
+			////console.log(sParams);
 			$('input[name= ' + sParam + ']').each(function() {
 				var inputId = this.id;
 				if (sParams.indexOf(inputId) > -1){
@@ -109,13 +152,13 @@
 				var QueryString = GetQueryStringParams(value);
 				if (QueryString != undefined) {
 					QueryStrings.push(QueryString);
-					console.log(QueryStrings)
+					//console.log(QueryStrings)
 				}
 			});
 			var tableName = "lewisham_tree_data_2016";
-			//console.log(typeof QueryStrings);
-			console.log(QueryStrings.length);
-			console.log(!QueryStrings);
+			////console.log(typeof QueryStrings);
+			//console.log(QueryStrings.length);
+			//console.log(!QueryStrings);
 			if (QueryStrings.length > 0) {
 				var sqlString1 = "select * from " + tableName + " where " + QueryStrings.join(" and ");
 				var sqlString2 = "with genus_label as (select distinct genus from " + tableName +  "), " +
@@ -129,9 +172,18 @@
 												 "on genus_label.genus = tree_count.genus ";
 			} else {
 				var sqlString1 = "select * from " + tableName + " where data_date in (3,2)";
-				var sqlString2 = "select genus, count(*) FROM "+ tableName +" where ward is not null and data_date in (3,2) group by genus";
+				var sqlString2 = "select genus, count(*) FROM "+ tableName +
+								 " where ward is not null " +
+								 "and data_date in (3,2) " +
+								 "and is_treepit is False " +
+								 "group by genus " +
+								 "union " +
+								 "select 'Tree-Pit', count(*) from " + tableName + " " +
+								 "where ward is not null " + 
+								 "and data_date in (3,2) " +
+								 "and is_treepit is True;";
 			}
-			console.log(sqlString2);
+			//console.log(sqlString2);
             // var tableName = "all_day_cdb_gu_l3";
             
             var layerSource = {
@@ -154,7 +206,7 @@
 					$("#switch_style").attr("href", selected + ".css");
 					condition = $('#'+selected).text();
 					layer.setCartoCSS(condition);
-					console.log(condition);
+					//console.log(condition);
 					})
 				//var $options1 = $(".layer_selector").find("input");
 				
@@ -172,9 +224,10 @@
 							var selected_condition = $("input[name=condition]:checked").map(function () {return this.value;}).get().join(",");
 							var selected_category = $("input[name=category]:checked").map(function () {return this.value;}).get().join(",");
 							var selected_year = $("input[name=year_selection]:checked").map(function () {return this.value;}).get().join(",");
-							//console.log(!selected_genus || !selected_ward || !selected_age || !selected_condition || !selected_category);
+							var selected_treepit = $("input[name=treepit_selection]:checked").map(function () {return this.value;}).get().join(",");
+							////console.log(!selected_genus || !selected_ward || !selected_age || !selected_condition || !selected_category);
 							//test none of the filters are blank, i.e. all unselected
-							if((!selected_genus || !selected_ward || !selected_age || !selected_condition || !selected_category) === false) {
+							if((!selected_genus || !selected_ward || !selected_age || !selected_condition || !selected_category || !selected_treepit) === false) {
 								var sqlString1 = "with genus_label as (select distinct genus from " + tableName +  "), " +
 												 "tree_count as (select genus, count(*) from " + tableName + " " +
 												 "where ward in (" + selected_ward + ") " +
@@ -182,16 +235,26 @@
 												 "and condition in (" + selected_condition + ") " +
 												 "and category in (" + selected_category + ") " +
 												 "and data_date in (3," + selected_year + ") " +
+												 "and is_treepit is False " +
+												 "and is_treepit in (" + selected_treepit + ") " +
 												 "group by genus) " +
 												 "select genus_label.genus, " +
 												 "CASE WHEN tree_count.count is null THEN 0 ELSE tree_count.count END " +
 												 "FROM genus_label " +
 												 "left outer join tree_count " +
-												 "on genus_label.genus = tree_count.genus ";
+												 "on genus_label.genus = tree_count.genus " +
+												 "union " +
+												 "select 'Tree-Pit', count(*) from " + tableName + " " +
+												 "where ward in (" + selected_ward + ") " +
+												 "and category in (" + selected_category +") " +
+												 "and data_date in (3," + selected_year + ") " +
+												 "and is_treepit is True " +
+												 "and is_treepit in (" + selected_treepit + ");";
 								//console.log(sqlString1);
 								//sql.execute("select genus, count(*) FROM "+ tableName +" where ward in (" + selected_ward + ") and age in (" + selected_age + ") and condition in (" + selected_condition + ") and category in (" + selected_category + ") group by genus")
 								sql.execute(sqlString1)
 								.done(function(data) {
+									//console.log(data)
 									for (var i = 0; i < data.total_rows; i++) {
 									  $("label[for = " + data.rows[i].genus +"]").text(data.rows[i].genus + " - " + data.rows[i].count);
 									}
@@ -199,12 +262,20 @@
 								//alert(selected_genus);
 								//alert($("input[name=genus]:checked").map(
 								 //function () {return this.value;}).get().join(","));
-								var sqlString = "SELECT * FROM " + tableName + " WHERE genus IN (" + selected_genus + ") AND ward IN (" + selected_ward + ") AND age IN (" + selected_age + ") AND condition IN (" + selected_condition + ") AND category IN (" + selected_category + ") AND data_date in (3," + selected_year + ")";
+								var sqlString = "SELECT * FROM " + tableName + 
+												" WHERE genus IN (" + selected_genus + ") " +
+												"AND ward IN (" + selected_ward + ") " +
+												"AND age IN (" + selected_age + ") " +
+												"AND condition IN (" + selected_condition + ") " +
+												"AND category IN (" + selected_category + ") " +
+												"AND data_date in (3," + selected_year + ") " +
+												"AND is_treepit in (" + selected_treepit + ")";
 								//alert(sqlString);
+								//console.log(sqlString);
 								layer.setSQL(sqlString);
 								sql.getBounds(sqlString).done(function(bounds) {
 								  //map_object.setBounds(bounds);
-								  //console.log(bounds);
+								  ////console.log(bounds);
 								  //map_object.fitBounds(bounds,{paddingBottomRight:[420,0]});
 								 map_object.fitBounds(bounds);
 								});
@@ -234,11 +305,14 @@
                 .addTo(map_object)
                 .done(function(layer) {
                     sublayer = layer.getSubLayer(0);
+					//var v = cdb.vis.Overlay.create('search', map_object.viz, {})
+					//v.show();
+					//$('#map').append(v.render().el);
 					//sublayer.set(subLayerOptions);
 					//sublayer.infowindow.set('template', $('#infowindow_template').html());			
 					//sublayer.on('featureClick', function(e, latlng, pos, data) {alert("Hey! You clicked " + data.cartodb_id);});
 					//cdb.vis.Vis.addInfowindow(map_object, layer.getSubLayer(0), ['cartodb_id'])
-					cdb.vis.Vis.addInfowindow(map_object, sublayer, ['arbortrack_id','genus','species_botanical','ward','age','condition','height','wiki_link','is_treepit','genus_long','category','location','postcode'], {
+					cdb.vis.Vis.addInfowindow(map_object, sublayer, ['arbortrack_id','genus','species_botanical','ward','age','condition','height','is_treepit','genus_long','category','location','postcode','is_latest'], {
 					 // we provide a nice default template, if you want yours uncomment this
 					 infowindowTemplate: $('#infowindow_template').html()
 				   });
@@ -246,18 +320,20 @@
 				   sublayer.setInteraction(true);
 				   sublayer.on('featureClick', function(event, latlng, pos, data) {
 				   //alert(data);
-				   console.log(data);
+				   //console.log(data);
 				   var mapboxAPI = 'https://api.mapbox.com/geocoding/v5/mapbox.places/' + latlng[1] + '%2C%20' + latlng[0] + '.json?types=address&access_token=';
 				   var token = 'pk.eyJ1IjoiY2F0Zm9yZHN0cmVldHRyZWVzIiwiYSI6IjQ2ZjQ3MjE0Y2RlMjc0MTA1YmQwOGRjMTk4MDExMDU3In0.3Zb9rrfLQNJOne4iw01YUQ';
 				   if (data.category == 'Street') {
 				   $.getJSON(mapboxAPI+token, function(data){
-					  console.log(data);
+					  //console.log(data);
 					  //var address = data.features[0].address + " " + data.features[0].text + ", " + data.features[0].context[1].text;
 					  var address = (data.features[0].place_name).split(",",1);
 					  var postcode = data.features[0].context[1].text;
 					  document.getElementById("infoLocationStreet").innerHTML = address;
 					  document.getElementById("infoLocationPostCode").innerHTML = postcode;
 					});
+					document.getElementById("lat").innerHTML = latlng[0];
+					document.getElementById("lon").innerHTML = latlng[1];
 					//bar = httpGet('https://api...' + pos);
 					//document.getElementById("foo").innerHTML = bar;
 					}
@@ -266,7 +342,7 @@
                     createSelector(sublayer);
                 })
                 .error(function(err) {
-                    console.log("error: " + err);
+                    //console.log("error: " + err);
                 });
 			
 			var sql = new cartodb.SQL({ user: 'catfordstreettrees' });
@@ -274,6 +350,7 @@
 					//sql.execute("select genus, count(*) FROM "+ tableName +" where ward in (" + selected_ward + ") group by genus")
 					sql.execute(sqlString2)
 					.done(function(data) {
+						//console.log(data)
 						for (var i = 0; i < data.total_rows; i++) {
 						  $("label[for = " + data.rows[i].genus +"]").text(data.rows[i].genus + " - " + data.rows[i].count);
 						}

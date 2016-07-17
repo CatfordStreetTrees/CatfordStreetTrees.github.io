@@ -11,7 +11,7 @@
 		<link href="favicon.ico" rel="shortcut icon" type="image/x-icon" />
 
         <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/3.15/themes/css/cartodb.css" type="text/css" />
-        <link rel="stylesheet" href="http://academy.cartodb.com/css/cdbui.css" type="text/css" />
+        <!--<link rel="stylesheet" href="http://academy.cartodb.com/css/cdbui.css" type="text/css" />-->
 		<link rel="stylesheet" href="map.css" type="text/css" />
 		<link rel="stylesheet" id="switch_style" href="single_colour.css" type="text/css" />
 		<!-- Bootstrap core CSS -->
@@ -38,7 +38,10 @@
 				  [zoom >= 16]{marker-width: 4.5;} 
 				   marker-allow-overlap: true;
 				  marker-fill: #176407;	
-				}			
+				}
+				#lewishamtreedata_all[is_treepit=1] {
+				marker-fill: #d90026;
+				}
         </style>
 		
 		<style type="cartocss/html" id="species_colours">
@@ -99,6 +102,9 @@
 				}
 				#lewishamtreedata_all[genus="Other"] {
 				marker-fill: #878a91;	
+				}
+				#lewishamtreedata_all[is_treepit=1] {
+				marker-fill: #d90026;
 				}				
 				
         </style>
@@ -161,6 +167,7 @@
 				<li>		<div class="bullet" style="background:#6c47a4"></div><label for='Locust' class='genus locust'>Locust</label></li>
 				<li>		<div class="bullet" style="background:#dea3b9"></div><label for='Apple' class='genus apple'>Apple</label></li>
 				<li>		<div class="bullet" style="background:#878a91"></div><label for='Other' class='genus other'>Other</label></li>
+				<li>		<div class="bullet tree-pit" style="background:#d90026"></div><label for='Tree-Pit' class='genus tree-pit'>Tree-Pit</label></li>
 			</ul>
 	</div>
 	
@@ -195,6 +202,10 @@
 						  </label>
 						  <!--<button type="button" class="btn btn-default" data-toggle="modal" data-target=".bs-example-modal-sm">2017</button>-->
 						  <button type="button" class="btn btn-default disabled" data-toggle="tooltip" data-placement="right" title="The next Lewisham Council Tree Audit to take place in 2017">2017</button>
+						</div>
+						<div class="btn-group btn-group-sm navbar-btn" role="group" name='treepit_selection' style="padding-left: 20px;">
+							<label class="checkbox-inline"><input type="checkbox" class="filter" name='treepit_selection' value="False" checked>Trees</label>
+							<label class="checkbox-inline"><input type="checkbox" class="filter" name='treepit_selection' value="True" checked>Tree-Pits</label>
 						</div>
 					</div>
                     <div class="nav navbar-nav navbar-right">
@@ -269,7 +280,7 @@
 								<li><input type='checkbox' checked=checked class='filter' name='condition' id='Dead' value="'Dead'"/><label for='Dead'>Dead</label></li>
 								<li><input type='checkbox' checked=checked class='filter' name='condition' id='Felled' value="'Felled'"/><label for='Felled'>Felled</label></li>
 								<li><input type='checkbox' checked=checked class='filter' name='condition' id='Stump' value="'Stump'"/><label for='Stump'>Stump</label></li>
-								<li><input type='checkbox' checked=checked class='filter' name='condition' id='Tree Pit' value="'Tree Pit'"/><label for='Tree Pit'>Tree Pit</label></li>
+								<!--<li><input type='checkbox' checked=checked class='filter' name='condition' id='Tree Pit' value="'Tree Pit'"/><label for='Tree Pit'>Tree Pit</label></li>-->
 								<li><input type='checkbox' checked=checked class='filter' name='condition' id='Not Recorded' value="''"/><label for='Not Recorded'>Not Recorded</label></li>
 							</ul>
 						</li>
@@ -297,32 +308,100 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-         <a class="close" data-dismiss="modal">×</a>
-            <h3 class="modal-title">Plant a tree here</h3>
+         
+		 <div class="row">
+         <div class="col-md-9"><h3 class="modal-title">Plant a tree here</h3></div>
+		 <div class="col-md-1">
+			<a href="https://twitter.com/se6_trees" target="_blank">
+				<img alt="Catford Street Trees" src="Twitter Avatar.png" style="width:64px;height:64px;border:0;" class="center-block">
+			</a>	 
+		 </div>
+		 <div class="col-md-1">
+			<a href="https://twitter.com/Broc_Soc_Trees" target="_blank">
+				<img alt="BrocSocTrees" src="BrocSocTrees Avatar.jpg" style="width:64px;height:64px;border:0;" class="center-block img-rounded">
+			</a>	
+		 </div>
+		 <div class="col-md-1"><a class="close" data-dismiss="modal">×</a></div>
+		 </div>
       </div>
+	  <form class="tree-request">
       <div class="modal-body">
-       <h4>Complete the form below to register your interest in planting a tree at this location</h4>
-		<form>
-		<div class="alert alert-success" role="alert">Feedback form coming soon, in the mean time please email your request to <a href="mailto:trees@brockleysociety.org.uk">Brockley Street Trees</a> 
-		and / or <a href="mailto:info@catfordstreettrees.org.uk">Catford Street Trees</a></div>
-		  <!--<div class="form-group">
-            <label for="approx-location" class="control-label">Approximate Location:</label>
-            <input type="text" class="form-control disabled" id="approx-location">
-          </div>
-          <div class="form-group">
-            <label for="recipient-name" class="control-label">Your Name:</label>
-            <input type="text" class="form-control disabled" id="recipient-name">
-          </div>
-          <div class="form-group">
-            <label for="message-text" class="control-label">Message:</label>
-            <textarea class="form-control disabled" id="message-text"></textarea>
-          </div>
-        </form>-->
+		<!--<div class="alert alert-success" role="alert">Feedback form coming soon, in the mean time please email your request to <a href="mailto:trees@brockleysociety.org.uk">Brockley Street Trees</a> 
+		and / or <a href="mailto:info@catfordstreettrees.org.uk">Catford Street Trees</a></div>-->
+		<div class="row">
+			<div class="col-md-7">
+			<h4>Complete the form below to register your interest in planting a street tree:</h4>
+			<p>Planting a new tree costs <strong>£240</strong>, which includes:</p>
+			<ul>
+				<li>A professionally cultivated sapling (approx. 4m)</li>
+				<li>A choice of tree species</li>
+				<li>Professional planting, incl. staking & fencing</li>
+				<li>Insurance against failure for 2 years</li>
+			</ul>
+			<p>For the first two year sponsors are required to water their trees.</p>
+			<p>More information on the sponsorship process can be found <a href="http://brockleystreettrees.blogspot.co.uk/p/tree-sponsorship.html">here</a>.</p>
+			
+				
+					<div class="form-group">
+						<label for="arbortrack-id" class="control-label">ID:</label>
+						<input type="text" class="form-control" id="arbortrack-id" name="arbortrack-id" readonly="readonly">
+					</div>
+					<div class="form-group">
+						<label for="approx-location" class="control-label">Approximate Location:</label>
+						<input type="text" class="form-control" id="approx-location" name="approx-location" readonly="readonly">
+					</div>
+					<div class="form-group">
+						<label for="requestors-name" class="control-label">Name:</label>
+						<input type="text" class="form-control" id="requestors-name" name="requestors-name" placeholder="Your name">
+					</div>
+					<div class="form-group">
+						<label for="requestors-email" class="control-label">Email:</label>
+						<input type="email" class="form-control" id="requestors-email" name="_replyto" placeholder="Your email">
+					</div>
+					<div class="form-group">
+						<label for="message-text" class="control-label">Message:</label>
+						<textarea class="form-control" id="message-text" name="message-text" placeholder="Your message"></textarea>
+					</div>
+					<div class="form-group">
+						<input type="hidden" id="request-subject" name="_subject" value="" />
+					</div>
+				
+			</div>	
+			<div class="col-md-5">
+				<div style="position: relative; width: 300; height: 300; overflow: hidden;">
+				<div style="position: relative; top: 0px; left: 0px; z-index: 10;">
+					<img src="mapoverlay-300.png" alt="Overlay" class="center-block">
+				</div>
+				<div style="position: absolute; top: 0px; left: 0px; z-index: 2;">
+					<img src="" alt="Mini Map" id="miniMap" class="center-block">
+				</div>
+				</div>	
+				<img src="" alt="Street View" id="googleStreetView" class="center-block">
+			</div>
+		</div>
+
       </div>
       <div class="modal-footer">
-      <a href="#" class="btn btn-success disabled">
-	  <span class="glyphicon glyphicon-tree-deciduous" aria-hidden="true"></span> Submit</a>
-            <a href="#" class="btn" data-dismiss="modal">Close</a>
+	  <button type="submit" class="btn btn-success" id="submit-request"><span class="glyphicon glyphicon-tree-deciduous" aria-hidden="true"></span> Submit</button>
+      <a href="#" class="btn" data-dismiss="modal">Close</a>
+      </div>	  
+	  </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade bs-example-modal-sm" id="treePitRequestSuccess" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">x</span></button>
+        <h4 class="modal-title" id="myModalLabel">Thank you for your request!</h4>
+      </div>
+      <div class="modal-body">
+		<p>Thank you for your interest in planting a new street tree at <span id="approx-location"></span>.</p>
+		<p>Someone will contact you shortly to discuss your request in more detail.</p>
+		<h4><small>SHARE THIS:</small></h4>
+		<a class="btn btn-primary" id="twitter-link-success" href="" target="_blank"><i class="fa fa-twitter"></i> Twitter</a>
       </div>
     </div>
   </div>
@@ -336,17 +415,12 @@
 			{{#is_treepit}}
 				<h2><span style="color:#999999">Vacant Tree Pit</span></h2>
 				<p></p>
-				<!--<a href="#/open-something" id="link">Change points color</a>-->
+				{{#is_latest}}
 				<p><button type="button" class="btn btn-success btn-block" data-toggle="modal" data-target="#myModal" id="treePitButton" title="Register your interest in planting a tree in this location"><h4><span style="color:white">Plant a tree here</span></h4></button></p>
-				<!--<img style="width: 100%" src="http://maps.googleapis.com/maps/api/streetview?size=120x120&location=51.4495813150528,-0.0172741065227725&pitch=0&fov=120&sensor=false"></src>-->
-				<!--<p><a data-toggle="modal" href="#example"  class="examplebtn btn btn-primary btn-large">Display modal</a></p>
-				 <button id="btnNew">Add Button</button>
-				 <button type="button" id="myButton1" data-loading-text="Loading..." class="btn btn-primary" autocomplete="off">
-						  Loading state
-				</button>	-->
+				{{/is_latest}}
 				<div class="row" style="max-width:95%">
 					<div class="col-md-5"><h4>id</h4></div>
-					<div class="col-md-7">{{arbortrack_id}}</div>
+					<div class="col-md-7" id="arbortrackID">{{arbortrack_id}}</div>
 				</div>
 				{{#location}}
 				<div class="row" style="max-width:95%">
@@ -362,6 +436,8 @@
 					<div class="col-md-7">{{ward}}</div>
 				</div>
 				<p><a href="http://wiki.catfordstreettrees.org.uk/index.php?title={{arbortrack_id}}" target="_blank">Wiki Link</a></p>
+				<div class="hidden" id="lon"></div>
+				<div class="hidden" id="lat"></div>
 			{{/is_treepit}}
 			{{^is_treepit}}
 				<h2><span class="genus-{{genus}}">{{genus_long}}</span></h2>
@@ -408,6 +484,8 @@
 				</div>
 				{{/height}}
 			  <p><a href="http://wiki.catfordstreettrees.org.uk/index.php?title={{arbortrack_id}}" target="_blank">Wiki Link</a></p>
+			  <div class="hidden" id="lon"></div>
+			  <div class="hidden" id="lat"></div>
 			 {{/is_treepit}}
             </div>
           </div>
