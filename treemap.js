@@ -68,7 +68,7 @@
 		event.preventDefault()
 			$.ajax({
 				type: "POST",
-				url: "https://formspree.io/info@catfordstreettrees.org.uk",
+				url: "https://formspree.io/info@streettreesforliving.org",
 				data: $('form.tree-request').serializeArray(),
 				dataType: "json",
 				success: function(){
