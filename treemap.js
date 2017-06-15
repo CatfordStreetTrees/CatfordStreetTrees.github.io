@@ -58,7 +58,7 @@
 	  $('#approx-location').attr("value", infoLocationStreet + ', ' + infoLocationPostcode)
 	  $('#arbortrack-id').attr("placeholder", arbortrackid)
 	  $('#arbortrack-id').attr("value", arbortrackid)
-	  $('#request-subject').attr("value", arbortrackid + "-" + infoLocationStreet + ', ' + infoLocationPostcode)
+	  $('#request-subject').attr("value", arbortrackid + " - " + infoLocationStreet + ', ' + infoLocationPostcode)
 	  modal.find('.modal-body input approx-location').val(infoLocationStreet)
 	})
 	
